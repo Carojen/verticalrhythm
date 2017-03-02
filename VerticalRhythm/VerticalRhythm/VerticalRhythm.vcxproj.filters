@@ -16,6 +16,15 @@
     <Filter Include="Source Files\Player">
       <UniqueIdentifier>{06d899f1-18de-495e-8037-503782499dbc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Levelgenerator">
+      <UniqueIdentifier>{c4b0ed58-3726-4f05-a4c8-114c4535b46a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Player">
+      <UniqueIdentifier>{6c0aea9d-41ee-4fdd-ab64-3d7456f23fbc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Levelgenerator">
+      <UniqueIdentifier>{2dc6690d-4353-41f3-997b-49f2c0f77b1e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -36,11 +45,11 @@
     <ClCompile Include="player.cpp">
       <Filter>Source Files\Player</Filter>
     </ClCompile>
+    <ClCompile Include="levelgenerator.cpp">
+      <Filter>Source Files\Levelgenerator</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="player.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="resourcemanager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -52,6 +61,12 @@
     </ClInclude>
     <ClInclude Include="ObjectManager.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="player.h">
+      <Filter>Header Files\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="levelgenerator.h">
+      <Filter>Header Files\Levelgenerator</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

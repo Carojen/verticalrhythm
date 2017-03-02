@@ -3,13 +3,21 @@
 #include "ObjectManager.h"
 #include <iostream>
 #include <vector>
+#include "levelgenerator.h"
 int main()
 {
 	sf::RenderWindow window(sf::VideoMode(1024, 728), "Rhythm");
 	window.setFramerateLimit(60);
 	std::cout << "Window created" << std::endl;
 	
-	ObjectManager::instance().createTiles();
+	//ObjectManager::instance().createTiles();
+
+	std::vector<rhythm> myRhythms;
+	rhythm r1;
+	r1.density = Density::high;
+	myRhythms.push_back(r1);
+
+	ObjectManager::instance().createTiles(myRhythms);
 	
 	sf::Time time;
 	sf::Clock clock;
