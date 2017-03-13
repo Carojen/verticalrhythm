@@ -13,6 +13,11 @@ Tile::Tile(sf::Vector2f position)
 
 }
 
+Tile::Tile(sf::Vector2i position)
+{
+	Tile(sf::Vector2f(position.x, position.y));
+}
+
 Tile::~Tile()
 {
 }

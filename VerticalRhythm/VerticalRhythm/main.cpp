@@ -16,21 +16,18 @@ int main()
 	
 	//ObjectManager::instance().createTiles();
 
-	std::vector<rhythm> myRhythms;
-	rhythm r1;	
-	r1.density = Density::medium;
-	r1.length = 10;
-	myRhythms.push_back(r1);
-	rhythm r2;
-	r2.density = Density::high;
-	r2.length = 10;
-	myRhythms.push_back(r2);
-	rhythm r3;
-	r3.density = Density::low;
-	r3.length = 10;
-	myRhythms.push_back(r3);
-	
-	ObjectManager::instance().createTiles(myRhythms);
+	for (int d = 0; d < 3; d++)	
+	{
+		std::vector<rhythm> rhythms;
+		for (int l = 1; l < 5; l++)
+		{
+			rhythm r;
+			r.density = (Density)d;
+			r.length = l*5;
+			rhythms.push_back(r);
+		}
+		ObjectManager::instance().createTiles(rhythms, sf::Vector2f(64 * 2 * d, 0));
+	}
 	
 	sf::Time time;
 	sf::Clock clock;

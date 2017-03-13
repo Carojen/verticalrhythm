@@ -6,6 +6,7 @@ class Tile
 {
 public:
 	Tile(sf::Vector2f position);
+	Tile(sf::Vector2i position);
 	~Tile();
 	void update();
 	void render(sf::RenderWindow& window);

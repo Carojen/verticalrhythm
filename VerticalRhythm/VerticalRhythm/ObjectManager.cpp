@@ -25,7 +25,7 @@ ObjectManager& ObjectManager::instance()
 
 void ObjectManager::createTiles()
 {
-	sf::Vector2f position = sf::Vector2f(0, 0);
+	sf::Vector2f position = sf::Vector2f(-512, 0);
 	for (int i = 0; i<20; i++)
 	{
 		mTiles.push_back(new Tile(position));
@@ -39,9 +39,10 @@ void ObjectManager::createTiles()
 }
 
 //Change this to take some other kind of input - not rhythms directly.
-void ObjectManager::createTiles(std::vector<rhythm> rhythms)
-{
-	sf::Vector2f position = sf::Vector2f(0, 512);
+void ObjectManager::createTiles(std::vector<rhythm> rhythms, sf::Vector2f offset)
+{	
+	sf::Vector2f position = sf::Vector2f(256, 0) + offset;
+	std::cout << position.x << ", " << position.y << std::endl;
 	for (auto rhythm : rhythms)
 	{	
 		int nrOfBeats = rhythm.type == RhythmType::regular ? 5 : 8;	
@@ -83,7 +84,7 @@ void ObjectManager::createTiles(std::vector<rhythm> rhythms)
 		for (auto beat : beats)
 		{
 			std::cout << beat << ", ";
-			position.y += beat * 64 * 4;
+			position.y += beat * 64 * 2;
 			mTiles.push_back(new Tile(position));			
 		}
 		std::cout << "]" << std::endl;
