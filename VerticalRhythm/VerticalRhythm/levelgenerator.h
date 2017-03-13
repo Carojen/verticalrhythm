@@ -7,10 +7,28 @@
 
 enum Density
 {
-	low,
-	medium,
-	high
+	low,	// = 0,	3,	4
+	medium,	// = 1,	5,	8
+	high	// = 2,	10,	16
 };
+
+enum RhythmType
+{
+	regular,
+	swing,
+	random
+};
+
+//	beat = regular *= 5, swing *= 8
+//	5 or 8
+//	density: low = roundup(medium/2), high = medium * 2
+//	nrOfbeats *= density
+//	2.5,	5,	10	or	4,	8,	16
+//		std::ceil - 2.5 -> 3
+//	nrOfbeats *= length/20
+//	array[nrOfbeats]
+//	if regular fill array w/ length/nrOfbeats
+//	else length/nrOfbeats * 2, alternate * 4/5 and * 1/5
 
 enum MovementState
 {
@@ -38,9 +56,9 @@ struct stop
 
 struct rhythm
 {
-	int length = 10; //{0,5,10,15,20}
-	Density density = Density::low;
-	std::vector<int> beatPattern = { 0,0,0,0,1 }; //regular {0,0,0,0,1}, swing {0,0,0,1,1}
+	int length = 20; //{0,5,10,15,20}
+	Density density = Density::medium;
+	RhythmType type = RhythmType::regular;
 	bool isReflectable = false;
 	bool isRepeatable = false;
 };
