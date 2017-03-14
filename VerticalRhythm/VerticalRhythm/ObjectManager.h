@@ -11,7 +11,7 @@ public:
 	static ObjectManager& instance();
 	~ObjectManager();
 	void createTiles();
-	void createTiles(std::vector<rhythm> rhythms, sf::Vector2f offset = sf::Vector2f(0.0f,0.0f));
+	void createTiles(std::vector<double> beats, sf::Vector2f offset = sf::Vector2f(0.0f,0.0f));
 	static std::vector<Tile*>& GetTiles();
 private:
 	ObjectManager();

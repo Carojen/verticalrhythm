@@ -14,21 +14,32 @@ int main()
 	view.zoom(2.0f);
 	window.setView(view);
 	
-	//ObjectManager::instance().createTiles();
-
-	for (int d = 0; d < 3; d++)	
-	{
-		std::vector<rhythm> rhythms;
+	
+	int count = 0;
+	for (int d = 0; d < 3; d++)
+	{		
 		for (int l = 1; l < 5; l++)
 		{
 			rhythm r;
 			r.density = (Density)d;
-			r.length = l*5;
-			rhythms.push_back(r);
-		}
-		ObjectManager::instance().createTiles(rhythms, sf::Vector2f(64 * 2 * d, 0));
+			r.length = l * 5;
+			r.type = RhythmType::swing;	
+			count++;
+			ObjectManager::instance().createTiles(LevelGenerator::instance().GetBeats(r), sf::Vector2f(64 * 2 * count, 0));
+		}		
 	}
-	
+	for (int d = 0; d < 3; d++)
+	{
+		for (int l = 1; l < 5; l++)
+		{
+			rhythm r;
+			r.density = (Density)d;
+			r.length = l * 5;
+			r.type = RhythmType::regular;
+			count++;
+			ObjectManager::instance().createTiles(LevelGenerator::instance().GetBeats(r), sf::Vector2f(64 * 2 * count, 0));
+		}
+	}
 	sf::Time time;
 	sf::Clock clock;
 
@@ -72,6 +83,14 @@ int main()
 				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 				{
 					view.move(0, 64);
+				}
+				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+				{
+					view.move(-64, 0);
+				}
+				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+				{
+					view.move(64, 0);
 				}
 				window.setView(view);
 			}

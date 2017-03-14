@@ -56,7 +56,7 @@ struct stop
 
 struct rhythm
 {
-	int length = 20; //{0,5,10,15,20}
+	int length = 20; //{5,10,15,20}
 	Density density = Density::medium;
 	RhythmType type = RhythmType::regular;
 	bool isReflectable = false;
@@ -71,10 +71,13 @@ struct rhytmgroup
 
 class LevelGenerator
 {
+public:
+	static LevelGenerator& instance();
 	LevelGenerator();
 	~LevelGenerator();
 	rhythm GetRhythm();
 	rhytmgroup GetRhythmGroup();
+	std::vector<double> GetBeats(rhythm r);
 	
 };
 

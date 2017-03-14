@@ -39,57 +39,17 @@ void ObjectManager::createTiles()
 }
 
 //Change this to take some other kind of input - not rhythms directly.
-void ObjectManager::createTiles(std::vector<rhythm> rhythms, sf::Vector2f offset)
+void ObjectManager::createTiles(std::vector<double> beats, sf::Vector2f offset)
 {	
 	sf::Vector2f position = sf::Vector2f(256, 0) + offset;
-	std::cout << position.x << ", " << position.y << std::endl;
-	for (auto rhythm : rhythms)
-	{	
-		int nrOfBeats = rhythm.type == RhythmType::regular ? 5 : 8;	
-		switch (rhythm.density)
-		{
-		case low:
-			nrOfBeats =  std::ceil((double)nrOfBeats / 2.0);
-			break;
-		case medium:
-			break;
-		case high:
-			nrOfBeats *= 2;
-		default:
-			break;
-		}
-		nrOfBeats *= (double)rhythm.length/20.0;
-		std::vector<double> beats;
-		for (int i = 0; i < nrOfBeats; i++)
-		{
-			if (rhythm.type == RhythmType::regular)
-			{
-				beats.push_back(rhythm.length/nrOfBeats);
-			}
-			else
-			{
-				if (i % 2 == 0)
-				{
-					beats.push_back(rhythm.length / nrOfBeats * 4 / 5.0);
-				}
-				else
-				{
-					beats.push_back(rhythm.length / nrOfBeats * 1 / 5.0);
-				}
-			}
-			
-		}
-		
-		std::cout << "[";
-		for (auto beat : beats)
-		{
-			std::cout << beat << ", ";
-			position.y += beat * 64 * 2;
-			mTiles.push_back(new Tile(position));			
-		}
-		std::cout << "]" << std::endl;
+	
+	for (auto beat : beats)
+	{
+		std::cout << beat << " ";
+		position.y += beat * 64 * 2 * 5;
+		mTiles.push_back(new Tile(position));			
 	}
-	std::cout << "Tiles created from rhythm" << std::endl;
+	std::cout << std::endl;	
 }
 
 std::vector<Tile*>& ObjectManager::GetTiles()
