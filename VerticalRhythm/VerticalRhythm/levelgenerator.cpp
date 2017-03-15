@@ -5,6 +5,7 @@
 
 LevelGenerator::LevelGenerator()
 {
+	srand(time(NULL));
 }
 
 LevelGenerator::~LevelGenerator()
@@ -22,9 +23,9 @@ rhythm LevelGenerator::GetRhythm()
 	return rhythm();
 }
 
-rhytmgroup LevelGenerator::GetRhythmGroup()
+rhythmgroup LevelGenerator::GetRhythmGroup()
 {
-	return rhytmgroup();
+	return rhythmgroup();
 }
 
 std::vector<double> LevelGenerator::GetBeats(rhythm r)
@@ -48,7 +49,7 @@ std::vector<double> LevelGenerator::GetBeats(rhythm r)
 	{
 		nrOfBeats = 1;
 	}
-	std::cout << nrOfBeats << ": ";
+	//std::cout << nrOfBeats << ": ";
 	
 	std::vector<double> beats;
 	for (int i = 0; i < nrOfBeats; i++)
@@ -86,7 +87,66 @@ std::vector<double> LevelGenerator::GetBeats(rhythm r)
 		beat *= r.length / sum;
 		sum2 += beat;
 	}
-	std::cout << "(" << r.length << ")" << sum2 << " - ";	
-		
+	//std::cout << "(" << r.length << ")" << sum2 << " - ";	
+
 	return beats;
+}
+
+void LevelGenerator::GetActions(std::vector<double> beats)
+{
+	
+	std::vector<action> actions;
+	double sum = 0;
+	for (auto n : beats)
+	{
+		sum += n;
+	}
+	int randomValue = std::rand() % 2;
+
+	std::cout << "[ ";
+	double currentTime = 0;
+	double endMove = 0;
+	
+
+	for (auto beat : beats)
+	{
+		action a = action();
+		a.word = (verb)randomValue;
+		a.starttime = currentTime;
+
+		double length = 0;
+		if (a.word == verb::move)
+		{
+			length = (rand() % (int)((sum - currentTime) * 4) + 1) * 0.25;
+		}
+		else
+		{
+			length = (rand() % (int)(beat * 4) + 1) * 0.25;
+		}
+		
+		a.stoptime = currentTime + length;
+		actions.push_back(a);
+
+		std::cout << beat << " ";
+		randomValue = std::rand() % 2;
+		currentTime += beat;
+	}
+	std::cout << "]" << std::endl;
+	for (auto a : actions)
+	{
+		switch (a.word)
+		{
+		case move:
+			std::cout << "move: " << a.starttime << " " << a.stoptime 
+				<< " (" << a.stoptime - a.starttime << ")";
+			break;
+		case brake:
+			std::cout << "brake: " << a.starttime << " " << a.stoptime
+				<< " (" << a.stoptime - a.starttime << ")";
+			break;
+		default:
+			break;
+		}
+		std::cout << std::endl;
+	}
 }

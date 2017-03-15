@@ -45,11 +45,12 @@ void ObjectManager::createTiles(std::vector<double> beats, sf::Vector2f offset)
 	
 	for (auto beat : beats)
 	{
-		std::cout << beat << " ";
+		
+		//std::cout << beat << " ";
 		position.y += beat * 64 * 2 * 5;
 		mTiles.push_back(new Tile(position));			
 	}
-	std::cout << std::endl;	
+	//std::cout << std::endl;	
 }
 
 std::vector<Tile*>& ObjectManager::GetTiles()

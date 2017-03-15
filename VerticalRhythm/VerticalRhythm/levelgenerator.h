@@ -18,28 +18,18 @@ enum RhythmType
 	swing,
 	random
 };
-
-//	beat = regular *= 5, swing *= 8
-//	5 or 8
-//	density: low = roundup(medium/2), high = medium * 2
-//	nrOfbeats *= density
-//	2.5,	5,	10	or	4,	8,	16
-//		std::ceil - 2.5 -> 3
-//	nrOfbeats *= length/20
-//	array[nrOfbeats]
-//	if regular fill array w/ length/nrOfbeats
-//	else length/nrOfbeats * 2, alternate * 4/5 and * 1/5
-
+/*
 enum MovementState
 {
 	moving,
 	waiting
 };
 
+
 enum Interval
 {
 	falling,
-	breaking
+	braking
 };
 
 struct state
@@ -48,12 +38,26 @@ struct state
 	MovementState move;
 };
 
-struct stop
+struct brake
 {
 	int length;
 	Interval interval;
+};*/
+
+enum verb
+{
+	move,
+	brake
 };
 
+struct action
+{
+	verb word;
+	double starttime;
+	double stoptime;
+};
+
+//A rhythm is the pre-stage to a level-segment
 struct rhythm
 {
 	int length = 20; //{5,10,15,20}
@@ -63,10 +67,10 @@ struct rhythm
 	bool isRepeatable = false;
 };
 
-struct rhytmgroup
+struct rhythmgroup
 {
-	std::list<state> states;
-	std::queue<stop> stops;
+	//std::list<state> states;
+	//std::queue<brake> brakes;
 };
 
 class LevelGenerator
@@ -76,8 +80,9 @@ public:
 	LevelGenerator();
 	~LevelGenerator();
 	rhythm GetRhythm();
-	rhytmgroup GetRhythmGroup();
+	rhythmgroup GetRhythmGroup();
 	std::vector<double> GetBeats(rhythm r);
+	void GetActions(std::vector<double> beats);
 	
 };
 

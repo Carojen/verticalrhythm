@@ -26,9 +26,10 @@ int main()
 			r.type = RhythmType::swing;	
 			count++;
 			ObjectManager::instance().createTiles(LevelGenerator::instance().GetBeats(r), sf::Vector2f(64 * 2 * count, 0));
+			LevelGenerator::instance().GetActions(LevelGenerator::instance().GetBeats(r));
 		}		
 	}
-	for (int d = 0; d < 3; d++)
+	/*for (int d = 0; d < 3; d++)
 	{
 		for (int l = 1; l < 5; l++)
 		{
@@ -39,7 +40,9 @@ int main()
 			count++;
 			ObjectManager::instance().createTiles(LevelGenerator::instance().GetBeats(r), sf::Vector2f(64 * 2 * count, 0));
 		}
-	}
+	}*/
+
+	
 	sf::Time time;
 	sf::Clock clock;
 
