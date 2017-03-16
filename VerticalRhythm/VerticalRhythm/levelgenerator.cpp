@@ -92,7 +92,7 @@ std::vector<double> LevelGenerator::GetBeats(rhythm r)
 	return beats;
 }
 
-void LevelGenerator::GetActions(std::vector<double> beats)
+std::vector<action> LevelGenerator::GetActions(std::vector<double> beats)
 {
 	
 	std::vector<action> actions;
@@ -106,18 +106,32 @@ void LevelGenerator::GetActions(std::vector<double> beats)
 	std::cout << "[ ";
 	double currentTime = 0;
 	double endMove = 0;
-	
+	int latestMoveIndex = -1;
 
 	for (auto beat : beats)
 	{
 		action a = action();
-		a.word = (verb)randomValue;
+		a.word = (Verb)randomValue;
 		a.starttime = currentTime;
 
 		double length = 0;
-		if (a.word == verb::move)
+		if (a.word == Verb::move)
 		{
 			length = (rand() % (int)((sum - currentTime) * 4) + 1) * 0.25;
+			if (latestMoveIndex != -1)
+			{
+				action& b = actions.at(latestMoveIndex);
+				if (b.stoptime >= currentTime)
+				{
+					b.stoptime = currentTime;
+					a.direction = (Direction)((b.direction + 1) % 2);
+				}				
+			}
+			else
+			{
+				a.direction = (Direction)(rand() % 2);
+			}
+			latestMoveIndex = actions.size();
 		}
 		else
 		{
@@ -137,7 +151,7 @@ void LevelGenerator::GetActions(std::vector<double> beats)
 		switch (a.word)
 		{
 		case move:
-			std::cout << "move: " << a.starttime << " " << a.stoptime 
+			std::cout << (a.direction == Direction::left ? "left " : "right ")  << a.starttime << " " << a.stoptime 
 				<< " (" << a.stoptime - a.starttime << ")";
 			break;
 		case brake:
@@ -149,4 +163,6 @@ void LevelGenerator::GetActions(std::vector<double> beats)
 		}
 		std::cout << std::endl;
 	}
+	return actions;
 }
+

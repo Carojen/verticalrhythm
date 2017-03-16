@@ -53,6 +53,34 @@ void ObjectManager::createTiles(std::vector<double> beats, sf::Vector2f offset)
 	//std::cout << std::endl;	
 }
 
+void ObjectManager::createTiles(std::vector<action> actions, sf::Vector2f offset)
+{
+	sf::Vector2f position = sf::Vector2f(256, 0) + offset;
+	TileType type = tile;
+	for (int i = 0; i < actions.back().stoptime * 4; i++)
+	{
+		position.y += 64;
+		mTiles.push_back(new Tile(position, type));
+	}
+	position = sf::Vector2f(256, 0) + offset;
+	for (auto a : actions)
+	{
+		position.y = a.starttime * 64 * 4 + offset.y;
+		if (a.word == move)
+		{
+			type = a.direction == left ? leftTile : rightTile;			
+		}
+		else
+		{
+			type = brakeTile;
+		}
+		std::cout << a.starttime << " -> " << position.y << std::endl;
+		mTiles.push_back(new Tile(position, type));
+	}
+
+	//std::cout << std::endl;	
+}
+
 std::vector<Tile*>& ObjectManager::GetTiles()
 {
 	return instance().mTiles;

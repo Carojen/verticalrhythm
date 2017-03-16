@@ -44,18 +44,26 @@ struct brake
 	Interval interval;
 };*/
 
-enum verb
+enum Verb
 {
 	move,
 	brake
 };
 
+enum Direction
+{
+	left,
+	right
+};
 struct action
 {
-	verb word;
+	Verb word;
+	Direction direction;
 	double starttime;
 	double stoptime;
 };
+
+
 
 //A rhythm is the pre-stage to a level-segment
 struct rhythm
@@ -82,8 +90,7 @@ public:
 	rhythm GetRhythm();
 	rhythmgroup GetRhythmGroup();
 	std::vector<double> GetBeats(rhythm r);
-	void GetActions(std::vector<double> beats);
-	
+	std::vector<action> GetActions(std::vector<double> beats);	
 };
 
 #endif

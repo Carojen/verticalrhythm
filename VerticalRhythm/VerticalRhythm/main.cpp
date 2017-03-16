@@ -15,6 +15,10 @@ int main()
 	window.setView(view);
 	
 	
+		
+	
+
+
 	int count = 0;
 	for (int d = 0; d < 3; d++)
 	{		
@@ -25,11 +29,10 @@ int main()
 			r.length = l * 5;
 			r.type = RhythmType::swing;	
 			count++;
-			ObjectManager::instance().createTiles(LevelGenerator::instance().GetBeats(r), sf::Vector2f(64 * 2 * count, 0));
-			LevelGenerator::instance().GetActions(LevelGenerator::instance().GetBeats(r));
+			ObjectManager::instance().createTiles(LevelGenerator::instance().GetActions(LevelGenerator::instance().GetBeats(r)), sf::Vector2f(64 * 20 * count, 0));
 		}		
 	}
-	/*for (int d = 0; d < 3; d++)
+	for (int d = 0; d < 3; d++)
 	{
 		for (int l = 1; l < 5; l++)
 		{
@@ -38,9 +41,9 @@ int main()
 			r.length = l * 5;
 			r.type = RhythmType::regular;
 			count++;
-			ObjectManager::instance().createTiles(LevelGenerator::instance().GetBeats(r), sf::Vector2f(64 * 2 * count, 0));
+			ObjectManager::instance().createTiles(LevelGenerator::instance().GetActions(LevelGenerator::instance().GetBeats(r)), sf::Vector2f(64 * 20 * count, 0));
 		}
-	}*/
+	}
 
 	
 	sf::Time time;
