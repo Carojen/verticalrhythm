@@ -13,38 +13,8 @@ int main()
 	sf::View view = window.getDefaultView();
 	view.zoom(2.0f);
 	window.setView(view);
-	
-	
-		
-	
 
-
-	int count = 0;
-	for (int d = 0; d < 3; d++)
-	{		
-		for (int l = 1; l < 5; l++)
-		{
-			rhythm r;
-			r.density = (Density)d;
-			r.length = l * 5;
-			r.type = RhythmType::swing;	
-			count++;
-			ObjectManager::instance().createTiles(LevelGenerator::instance().GetActions(LevelGenerator::instance().GetBeats(r)), sf::Vector2f(64 * 20 * count, 0));
-		}		
-	}
-	for (int d = 0; d < 3; d++)
-	{
-		for (int l = 1; l < 5; l++)
-		{
-			rhythm r;
-			r.density = (Density)d;
-			r.length = l * 5;
-			r.type = RhythmType::regular;
-			count++;
-			ObjectManager::instance().createTiles(LevelGenerator::instance().GetActions(LevelGenerator::instance().GetBeats(r)), sf::Vector2f(64 * 20 * count, 0));
-		}
-	}
-
+	ObjectManager::instance().createLevel();
 	
 	sf::Time time;
 	sf::Clock clock;

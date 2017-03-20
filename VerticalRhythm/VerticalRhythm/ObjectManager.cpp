@@ -85,3 +85,32 @@ std::vector<Tile*>& ObjectManager::GetTiles()
 {
 	return instance().mTiles;
 }
+
+void ObjectManager::createLevel()
+{
+	int count = 0;
+	for (int d = 0; d < 3; d++)
+	{
+		for (int l = 1; l < 5; l++)
+		{
+			rhythm r;
+			r.density = (Density)d;
+			r.length = l * 5;
+			r.type = RhythmType::swing;
+			count++;
+			createTiles(LevelGenerator::instance().GetActions(LevelGenerator::instance().GetBeats(r)), sf::Vector2f(64 * 20 * count, 0));
+		}
+	}
+	for (int d = 0; d < 3; d++)
+	{
+		for (int l = 1; l < 5; l++)
+		{
+			rhythm r;
+			r.density = (Density)d;
+			r.length = l * 5;
+			r.type = RhythmType::regular;
+			count++;
+			createTiles(LevelGenerator::instance().GetActions(LevelGenerator::instance().GetBeats(r)), sf::Vector2f(64 * 20 * count, 0));
+		}
+	}
+}

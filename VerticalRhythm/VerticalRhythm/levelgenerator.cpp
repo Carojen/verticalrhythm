@@ -49,7 +49,6 @@ std::vector<double> LevelGenerator::GetBeats(rhythm r)
 	{
 		nrOfBeats = 1;
 	}
-	//std::cout << nrOfBeats << ": ";
 	
 	std::vector<double> beats;
 	for (int i = 0; i < nrOfBeats; i++)
@@ -87,14 +86,12 @@ std::vector<double> LevelGenerator::GetBeats(rhythm r)
 		beat *= r.length / sum;
 		sum2 += beat;
 	}
-	//std::cout << "(" << r.length << ")" << sum2 << " - ";	
 
 	return beats;
 }
 
 std::vector<action> LevelGenerator::GetActions(std::vector<double> beats)
-{
-	
+{	
 	std::vector<action> actions;
 	double sum = 0;
 	for (auto n : beats)
@@ -107,17 +104,21 @@ std::vector<action> LevelGenerator::GetActions(std::vector<double> beats)
 	double currentTime = 0;
 	double endMove = 0;
 	int latestMoveIndex = -1;
+	bool simultanousAction = false;
 
-	for (auto beat : beats)
-	{
+	for (int i = 0; i < beats.size(); i++)
+	{		
+		double beat = beats[i];
+		currentTime += beat; // starttiden är efter det första beatet/vänteperioden. Se anteckning 20/3.
 		action a = action();
 		a.word = (Verb)randomValue;
-		a.starttime = currentTime;
+		a.starttime = currentTime; 
 
 		double length = 0;
 		if (a.word == Verb::move)
 		{
-			length = (rand() % (int)((sum - currentTime) * 4) + 1) * 0.25;
+			//längden på det sista beatet går inte att veta i förväg - det bestäms av när viloplattformen är
+			length = (rand() % (int)((sum + 1 - currentTime) * 4) + 1) * 0.25;
 			if (latestMoveIndex != -1)
 			{
 				action& b = actions.at(latestMoveIndex);
@@ -133,7 +134,7 @@ std::vector<action> LevelGenerator::GetActions(std::vector<double> beats)
 			}
 			latestMoveIndex = actions.size();
 		}
-		else
+		else //längden på inbromsningen
 		{
 			length = (rand() % (int)(beat * 4) + 1) * 0.25;
 		}
@@ -142,8 +143,20 @@ std::vector<action> LevelGenerator::GetActions(std::vector<double> beats)
 		actions.push_back(a);
 
 		std::cout << beat << " ";
-		randomValue = std::rand() % 2;
-		currentTime += beat;
+		if (std::rand() % 3 == 0 && simultanousAction == false) // one in three chance of having simultanous actions
+		{
+			//reset starting point to latest used point and set action to the opposite
+			currentTime -= beat;
+			randomValue = (randomValue + 1) % 2;
+			simultanousAction = true;
+			std::cout << "|";
+			i--;
+		}
+		else
+		{
+			simultanousAction = false;
+			randomValue = std::rand() % 2;
+		}			
 	}
 	std::cout << "]" << std::endl;
 	for (auto a : actions)
@@ -164,5 +177,14 @@ std::vector<action> LevelGenerator::GetActions(std::vector<double> beats)
 		std::cout << std::endl;
 	}
 	return actions;
+}
+
+void LevelGenerator::GetGeometry(std::vector<action> actions)
+{
+	//Create a list with left | right | brake as key words
+	//Create possible geometry for those actions
+	//Add these possibilities as entries under the keywords
+	//
+	//Create geometry according to type	
 }
 

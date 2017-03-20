@@ -4,6 +4,7 @@
 #include <vector>
 #include <list>
 #include <queue>
+#include <SFML\System\Vector2.hpp>
 
 enum Density
 {
@@ -50,6 +51,14 @@ enum Verb
 	brake
 };
 
+enum keyword
+{
+	move_left_ledge,
+	move_right_ledge,
+	moving_block_single,
+	side_passage
+};
+
 enum Direction
 {
 	left,
@@ -81,6 +90,13 @@ struct rhythmgroup
 	//std::queue<brake> brakes;
 };
 
+struct player
+{
+	sf::Vector2f speed = sf::Vector2f(10, 10);
+	sf::Vector2f size = sf::Vector2f(64, 64);
+	double brakeTime = 5.0;
+	double gravity = 9.82;
+};
 class LevelGenerator
 {
 public:
@@ -90,7 +106,12 @@ public:
 	rhythm GetRhythm();
 	rhythmgroup GetRhythmGroup();
 	std::vector<double> GetBeats(rhythm r);
-	std::vector<action> GetActions(std::vector<double> beats);	
+	std::vector<action> GetActions(std::vector<double> beats);
+	void GetGeometry(std::vector<action> actions);
+	player avatar;
+	
+	//Think this through how to do it
+	//std::map<std::vector<std::vector<keyword>>, Verb> keywords;
 };
 
 #endif
