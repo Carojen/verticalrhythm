@@ -70,6 +70,7 @@ struct geometry
 {
 	keyword type;
 	sf::Vector2f position;
+	double slope = 1;
 };
 
 

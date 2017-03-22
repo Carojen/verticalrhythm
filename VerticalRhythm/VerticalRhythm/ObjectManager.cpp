@@ -74,7 +74,7 @@ void ObjectManager::createTiles(std::vector<action> actions, sf::Vector2f offset
 		{
 			type = brakeTile;
 		}
-		std::cout << a.starttime << " -> " << position.y << std::endl;
+		//std::cout << a.starttime << " -> " << position.y << std::endl;
 		mTiles.push_back(new Tile(position, type));
 	}
 

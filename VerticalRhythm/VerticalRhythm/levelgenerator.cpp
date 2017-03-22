@@ -100,7 +100,7 @@ std::vector<action> LevelGenerator::GetActions(std::vector<double> beats)
 	}
 	int randomValue = std::rand() % 2;
 
-	std::cout << "[ ";
+	//std::cout << "[ ";
 	double currentTime = 0;
 	double endMove = 0;
 	int latestMoveIndex = -1;
@@ -142,14 +142,14 @@ std::vector<action> LevelGenerator::GetActions(std::vector<double> beats)
 		a.stoptime = currentTime + length;
 		actions.push_back(a);
 
-		std::cout << beat << " ";
+		//std::cout << beat << " ";
 		if (std::rand() % 3 == 0 && simultanousAction == false) // one in three chance of having simultanous actions
 		{
 			//reset starting point to latest used point and set action to the opposite
 			currentTime -= beat;
 			randomValue = (randomValue + 1) % 2;
 			simultanousAction = true;
-			std::cout << "|";
+			//std::cout << "|";
 			i--;
 		}
 		else
@@ -158,23 +158,23 @@ std::vector<action> LevelGenerator::GetActions(std::vector<double> beats)
 			randomValue = std::rand() % 2;
 		}			
 	}
-	std::cout << "]" << std::endl;
+	//std::cout << "]" << std::endl;
 	for (auto a : actions)
 	{
 		switch (a.word)
 		{
 		case move:
-			std::cout << (a.direction == Direction::left ? "left " : "right ")  << a.starttime << " " << a.stoptime 
-				<< " (" << a.stoptime - a.starttime << ")";
+			//std::cout << (a.direction == Direction::left ? "left " : "right ")  << a.starttime << " " << a.stoptime 
+				//<< " (" << a.stoptime - a.starttime << ")";
 			break;
 		case brake:
-			std::cout << "brake: " << a.starttime << " " << a.stoptime
-				<< " (" << a.stoptime - a.starttime << ")";
+			//std::cout << "brake: " << a.starttime << " " << a.stoptime
+				//<< " (" << a.stoptime - a.starttime << ")";
 			break;
 		default:
 			break;
 		}
-		std::cout << std::endl;
+		//std::cout << std::endl;
 	}
 	GetGeometry(actions);
 	return actions;
@@ -192,8 +192,7 @@ std::vector<geometry> LevelGenerator::GetGeometry(std::vector<action> actions)
 	{
 		avatar.position = sf::Vector2f(moveTime * avatar.speed.x, (a.starttime - brakeTime) * avatar.speed.y);
 		g.position = avatar.position;
-
-		std::cout << avatar.position.x << ", " << avatar.position.y << std::endl;
+				
 		//Sortera handlingarna
 		if (a.word == brake)
 		{
@@ -202,7 +201,7 @@ std::vector<geometry> LevelGenerator::GetGeometry(std::vector<action> actions)
 			if (!moves.empty() && !geometryElements.empty() && moves.back().starttime == a.starttime)
 			{
 				//modifiera senaste handlingen till att bli en mer tvär sväng åt samma riktning
-				geometryElements.back().type = keyword::other;
+				geometryElements.back().slope = std::abs(((moves.back().stoptime - moves.back().starttime) - (a.stoptime - a.starttime)) / (moves.back().stoptime - moves.back().starttime));
 			}
 			else
 			{
@@ -218,7 +217,7 @@ std::vector<geometry> LevelGenerator::GetGeometry(std::vector<action> actions)
 			if (!brakes.empty() && !geometryElements.empty() && brakes.back().starttime == a.starttime)
 			{
 				//modifiera senaste handlingen till att bli en mer tvär sväng åt samma riktning
-				geometryElements.back().type = keyword::other;
+				geometryElements.back().slope = std::abs(((a.stoptime - a.starttime) - (moves.back().stoptime - moves.back().starttime)) / (moves.back().stoptime - moves.back().starttime));
 			}
 			//Kolla om move har en brake direkt före alternativt överlappar något
 			else if(!brakes.empty() && !geometryElements.empty() && brakes.back().stoptime >= a.starttime)
@@ -262,7 +261,9 @@ std::vector<geometry> LevelGenerator::GetGeometry(std::vector<action> actions)
 		default:
 			break;
 		}
-		std::cout << std::endl;
+		//Slope = 0 ger horisontell förflyttning
+		//Slope = 1 ger diagonal förflyttning, ie standard sväng
+		std::cout <<". Slope: " << e.slope << std::endl;
 	}
 	return geometryElements;
 }
