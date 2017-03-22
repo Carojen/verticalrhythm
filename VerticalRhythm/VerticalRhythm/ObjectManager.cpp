@@ -41,7 +41,7 @@ void ObjectManager::createTiles()
 //Change this to take some other kind of input - not rhythms directly.
 void ObjectManager::createTiles(std::vector<double> beats, sf::Vector2f offset)
 {	
-	sf::Vector2f position = sf::Vector2f(256, 0) + offset;
+	sf::Vector2f position = sf::Vector2f(0, 0) + offset;
 	
 	for (auto beat : beats)
 	{

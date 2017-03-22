@@ -56,7 +56,8 @@ enum keyword
 	move_left_ledge,
 	move_right_ledge,
 	moving_block_single,
-	side_passage
+	side_passage,
+	other
 };
 
 enum Direction
@@ -64,6 +65,14 @@ enum Direction
 	left,
 	right
 };
+
+struct geometry
+{
+	keyword type;
+	sf::Vector2f position;
+};
+
+
 struct action
 {
 	Verb word;
@@ -96,6 +105,7 @@ struct player
 	sf::Vector2f size = sf::Vector2f(64, 64);
 	double brakeTime = 5.0;
 	double gravity = 9.82;
+	sf::Vector2f position = sf::Vector2f();
 };
 class LevelGenerator
 {
@@ -107,7 +117,7 @@ public:
 	rhythmgroup GetRhythmGroup();
 	std::vector<double> GetBeats(rhythm r);
 	std::vector<action> GetActions(std::vector<double> beats);
-	void GetGeometry(std::vector<action> actions);
+	std::vector<geometry> GetGeometry(std::vector<action> actions);
 	player avatar;
 	
 	//Think this through how to do it

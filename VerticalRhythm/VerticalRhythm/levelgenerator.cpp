@@ -176,15 +176,94 @@ std::vector<action> LevelGenerator::GetActions(std::vector<double> beats)
 		}
 		std::cout << std::endl;
 	}
+	GetGeometry(actions);
 	return actions;
 }
 
-void LevelGenerator::GetGeometry(std::vector<action> actions)
+std::vector<geometry> LevelGenerator::GetGeometry(std::vector<action> actions)
 {
+	std::vector<action> moves;
+	std::vector<action> brakes;
+	double moveTime = 0;
+	double brakeTime = 0;
+	std::vector<geometry> geometryElements;
+	geometry g;
+	for (action a : actions)
+	{
+		avatar.position = sf::Vector2f(moveTime * avatar.speed.x, (a.starttime - brakeTime) * avatar.speed.y);
+		g.position = avatar.position;
+
+		std::cout << avatar.position.x << ", " << avatar.position.y << std::endl;
+		//Sortera handlingarna
+		if (a.word == brake)
+		{
+			brakes.push_back(a);
+			//Kolla samtida brake och move
+			if (!moves.empty() && !geometryElements.empty() && moves.back().starttime == a.starttime)
+			{
+				//modifiera senaste handlingen till att bli en mer tvär sväng åt samma riktning
+				geometryElements.back().type = keyword::other;
+			}
+			else
+			{
+				g.type = keyword::moving_block_single;
+				geometryElements.push_back(g);
+			}
+			brakeTime += a.stoptime - a.starttime;
+		}
+		else
+		{
+			moves.push_back(a);
+			//Kolla samtida brake och move
+			if (!brakes.empty() && !geometryElements.empty() && brakes.back().starttime == a.starttime)
+			{
+				//modifiera senaste handlingen till att bli en mer tvär sväng åt samma riktning
+				geometryElements.back().type = keyword::other;
+			}
+			//Kolla om move har en brake direkt före alternativt överlappar något
+			else if(!brakes.empty() && !geometryElements.empty() && brakes.back().stoptime >= a.starttime)
+			{
+				//modifiera senaste handlingen från att vara moving_block till att vara side_passage
+				geometryElements.back().type = keyword::side_passage;
+			}
+			else
+			{
+				g.type = a.direction == left ? keyword::move_left_ledge : keyword::move_right_ledge;
+				geometryElements.push_back(g);
+			}
+			moveTime += (a.stoptime - a.starttime) * a.direction == left ? -1 : 1;			
+		}		
+	}
 	//Create a list with left | right | brake as key words
 	//Create possible geometry for those actions
 	//Add these possibilities as entries under the keywords
 	//
 	//Create geometry according to type	
+	for (auto e : geometryElements)
+	{
+		std::cout << "Position: " << e.position.x << ", " << e.position.y << ". Type: ";
+		switch (e.type)
+		{
+		case move_left_ledge:
+			std::cout << "move_left_ledge";
+			break;
+		case move_right_ledge:
+			std::cout << "move_right_ledge";
+			break;
+		case moving_block_single:
+			std::cout << "moving_block_single";
+			break;
+		case side_passage:
+			std::cout << "side_passage";
+			break;
+		case other:
+			std::cout << "other";
+			break;
+		default:
+			break;
+		}
+		std::cout << std::endl;
+	}
+	return geometryElements;
 }
 
