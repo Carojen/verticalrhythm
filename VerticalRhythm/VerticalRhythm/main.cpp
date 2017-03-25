@@ -14,7 +14,13 @@ int main()
 	view.zoom(2.0f);
 	window.setView(view);
 
-	ObjectManager::instance().createLevel();
+	
+	rhythm r;
+	sf::Vector2f offset  = sf::Vector2f();			
+	std::vector<action> actions = LevelGenerator::instance().createActions(r);
+	std::vector<geometry> blocks = LevelGenerator::instance().GetGeometry(actions);
+	ObjectManager::instance().addShapes(LevelGenerator::instance().GetShapes(blocks, offset));
+	
 	
 	sf::Time time;
 	sf::Clock clock;
@@ -83,6 +89,11 @@ int main()
 		for (auto t : ObjectManager::instance().GetTiles())
 		{
 			t->render(window);
+		}
+
+		for (auto s : ObjectManager::instance().GetShapes())
+		{
+			window.draw(*s);
 		}
 		
 		window.display();

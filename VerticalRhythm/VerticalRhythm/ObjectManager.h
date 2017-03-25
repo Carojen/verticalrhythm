@@ -16,9 +16,12 @@ public:
 	void createTiles(std::vector<action> actions, sf::Vector2f offset = sf::Vector2f(0.0f, 0.0f));
 	static std::vector<Tile*>& GetTiles();
 	void createLevel();
+	void addShapes(std::vector<sf::Shape*> shapes);
+	static std::vector<sf::Shape*>& GetShapes();
 private:
 	ObjectManager();
 	std::vector<Tile*> mTiles;
+	std::vector<sf::Shape*> mShapes;
 };
 
 #endif

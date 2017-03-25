@@ -5,6 +5,7 @@
 #include <list>
 #include <queue>
 #include <SFML\System\Vector2.hpp>
+#include <SFML\Graphics\Shape.hpp>
 
 enum Density
 {
@@ -56,7 +57,8 @@ enum keyword
 	move_left_ledge,
 	move_right_ledge,
 	moving_block_single,
-	side_passage,
+	move_left_passage,
+	move_right_passage,
 	other
 };
 
@@ -70,7 +72,7 @@ struct geometry
 {
 	keyword type;
 	sf::Vector2f position;
-	double slope = 1;
+	sf::Vector2f size = sf::Vector2f();
 };
 
 
@@ -103,7 +105,7 @@ struct rhythmgroup
 struct player
 {
 	sf::Vector2f speed = sf::Vector2f(10, 10);
-	sf::Vector2f size = sf::Vector2f(64, 64);
+	//sf::Vector2f size = sf::Vector2f(64, 64);
 	double brakeTime = 5.0;
 	double gravity = 9.82;
 	sf::Vector2f position = sf::Vector2f();
@@ -117,8 +119,13 @@ public:
 	rhythm GetRhythm();
 	rhythmgroup GetRhythmGroup();
 	std::vector<double> GetBeats(rhythm r);
-	std::vector<action> GetActions(std::vector<double> beats);
+	std::vector<action> createActions(std::vector<double> beats);
+	std::vector<action> createActions(rhythm r);
 	std::vector<geometry> GetGeometry(std::vector<action> actions);
+	geometry ActionToGeometry(action a);
+	std::vector<geometry> GetGeometry2(std::vector<action> actions);
+	std::vector<geometry> createGeometry(rhythm r);
+	std::vector<sf::Shape*> GetShapes(std::vector<geometry> geometryElements, sf::Vector2f offset = sf::Vector2f());
 	player avatar;
 	
 	//Think this through how to do it

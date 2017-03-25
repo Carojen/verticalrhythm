@@ -98,7 +98,8 @@ void ObjectManager::createLevel()
 			r.length = l * 5;
 			r.type = RhythmType::swing;
 			count++;
-			createTiles(LevelGenerator::instance().GetActions(LevelGenerator::instance().GetBeats(r)), sf::Vector2f(64 * 20 * count, 0));
+			//createTiles(LevelGenerator::instance().GetActions(LevelGenerator::instance().GetBeats(r)), sf::Vector2f(64 * 20 * count, 0));
+			LevelGenerator::instance().GetGeometry(LevelGenerator::instance().createActions(LevelGenerator::instance().GetBeats(r)));
 		}
 	}
 	for (int d = 0; d < 3; d++)
@@ -110,7 +111,21 @@ void ObjectManager::createLevel()
 			r.length = l * 5;
 			r.type = RhythmType::regular;
 			count++;
-			createTiles(LevelGenerator::instance().GetActions(LevelGenerator::instance().GetBeats(r)), sf::Vector2f(64 * 20 * count, 0));
+			//createTiles(LevelGenerator::instance().GetActions(LevelGenerator::instance().GetBeats(r)), sf::Vector2f(64 * 20 * count, 0));
+			LevelGenerator::instance().GetGeometry(LevelGenerator::instance().createActions(LevelGenerator::instance().GetBeats(r)));
 		}
 	}
+}
+
+void ObjectManager::addShapes(std::vector<sf::Shape*> shapes)
+{
+	for (auto shape : shapes)
+	{
+		mShapes.push_back(shape);
+	}
+}
+
+std::vector<sf::Shape*>& ObjectManager::GetShapes()
+{
+	return instance().mShapes;
 }
