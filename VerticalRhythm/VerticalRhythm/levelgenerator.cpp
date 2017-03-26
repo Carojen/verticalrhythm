@@ -123,13 +123,14 @@ std::vector<action> LevelGenerator::createActions(std::vector<double> beats)
 			else
 			{
 				a.direction = (Direction)(rand() % 2);
-			}
+			}			
 		}
 		
 		//Längden på en handling begränsas av längden på taktslaget
+		//Avataren ska hinna falla förbi hindret, så det måste finnas utrymme efter
 		if (i < beats.size() - 1)
 		{
-			length = rand() % (int)(beats[i + 1] * 4) * 0.25;
+			length = rand() % (int)(beats[i + 1] * 3) * 0.25;
 		}
 		else //Det sista beatet får samma längd som det första
 		{
@@ -177,6 +178,11 @@ std::vector<geometry> LevelGenerator::GetGeometry(std::vector<action> actions)
 			g.position = avatar.position;
 			g.size.x = (a.stoptime - a.starttime) * avatar.speed.x;
 			g.size.y = (a.stoptime - a.starttime) * avatar.speed.y;
+
+			if (a.stoptime - a.starttime < 0.75)
+			{
+				g.type = g.type == move_left_ledge ? move_left_hinder : move_right_hinder;
+			}
 		}
 		else if (a.word == brake)
 		{
@@ -191,276 +197,200 @@ std::vector<geometry> LevelGenerator::GetGeometry(std::vector<action> actions)
 	return geometryElements;
 }
 
-std::vector<geometry> LevelGenerator::GetGeometry2(std::vector<action> actions)
-{
-	std::vector<action> moves;
-	std::vector<action> brakes;
-	double moveTime = 0;
-	double brakeTime = 0;
-	std::vector<geometry> geometryElements;
-	/*
-	for (action a : actions)
-	{
-		//Registrera spelarens position innan den går in i bansegmentet
-		avatar.position = sf::Vector2f(moveTime * avatar.speed.x, (a.starttime - brakeTime) * avatar.speed.y);		
-		geometry g;
-		//Om det är en inbromsning, registrera det
-		if (a.word == brake)
-		{
-			//Om det finns en påbörjad sväng som överlappar med inbromsningen, dela upp handlingarna i flera som inte överlappar			
-			if (!moves.empty() && moves.back().stoptime > a.starttime)
-			{
-				brakes.push_back(a);
-				brakeTime += a.stoptime - a.starttime;
-
-				action move1, move2, move3 = moves.back();
-				action brake1, brake2 = a;
-
-				//Six cases: 
-				// 1. brake and move are at the same time
-				// 2. they begin at the same time, brake ends earlier
-				// 3. they begin at the same time, brake ends later
-				// 4. move has begun, both ends at the same time
-				// 5. move has begun, brake ends earlier
-				// 6. move has begun, brake ends later
-
-				if (move1.starttime == brake1.starttime)
-				{
-					if (move1.stoptime > brake1.stoptime)
-					{
-						move1.stoptime, move2.starttime = brake1.stoptime;
-						moves.back() = move1;
-						moves.push_back(move2);
-
-						g = geometryElements.back(); //Kombination av senaste move och brake
-						g.size.x = (brake1.stoptime - brake1.starttime) * avatar.speed.x;
-						g.size.y = (brake1.stoptime - brake1.starttime) * avatar.speed.y;
-						g.type = move1.direction == left ? move_left_passage : move_right_passage;
-						geometryElements.push_back(g);
-						geometryElements.push_back(ActionToGeometry(move2));
-					}
-					else if(move1.stoptime < brake1.stoptime)
-					{
-						brake1.stoptime, brake2.starttime = move1.stoptime;
-						brakes.back() = brake1;
-						brakes.push_back(brake2);
-						g = geometryElements.back(); //Kombination av senaste move och brake
-
-					}
-					else
-					{
-						move2.starttime, move3.starttime, brake2.starttime = -1;
-					}
-				}
-				else
-				{
-					if (move1.stoptime == brake1.stoptime)
-					{
-						move1.stoptime, move2.starttime = brake1.starttime;
-						moves.back() = move1;
-						moves.push_back(move2);
-						move3.starttime, brake2.starttime = -1;
-					}
-					else
-					{
-						
-					}
-				}
-
-			}
-			else
-			{
-				brakes.push_back(a);
-				brakeTime += a.stoptime - a.starttime;
-				g = ActionToGeometry(a);
-				geometryElements.push_back(g);
-			}			
-		}
-		else if (a.word == move)
-		{
-			//Om det finns en påbörjad inbromsning överlappar med svängen
-			if (!brakes.empty() && brakes.back().stoptime >= a.starttime)
-			{
-				moves.push_back(a);
-				moveTime += (a.stoptime - a.starttime) * a.direction == left ? -1 : 1;
-
-				//revertera avatarens position lika mycket som inbromsningen överlappar gånger avatarens fallhastighet
-				
-				//Ändra elementet från moving platform till move_passage om de har samma längd
-				if (brakes.back().starttime == a.starttime && brakes.back().stoptime == a.stoptime)
-				{
-					geometryElements.back().type = a.direction == left ? move_left_passage : move_right_passage;
-					//Uppdatera elementets storlek till att motsvara en ledge
-					geometryElements.back().size.x = (a.stoptime - a.starttime) * avatar.speed.x;
-				}			
-			}
-			else
-			{
-				moves.push_back(a);
-				moveTime += (a.stoptime - a.starttime) * a.direction == left ? -1 : 1;
-				g = ActionToGeometry(a);
-				geometryElements.push_back(g);
-			}			
-		}
-	}	
-	*/
-	return geometryElements;
-}
-
-geometry LevelGenerator::ActionToGeometry(action a)
-{
-	geometry g;
-	if (a.word == brake)
-	{
-		g.type = moving_block_single;
-		g.position = avatar.position;
-		g.size.x = 200;
-		g.size.y = 1;
-	}
-	else
-	{
-		g.type = a.direction == left ? move_left_ledge : move_right_ledge;
-		g.position = avatar.position;
-		g.size.x = (a.stoptime - a.starttime) * avatar.speed.x;
-		g.size.y = (a.stoptime - a.starttime) * avatar.speed.y;
-	}
-	return g;
-}
-/*
-std::vector<geometry> LevelGenerator::GetGeometry2(std::vector<action> actions)
-{
-	std::vector<action> moves;
-	std::vector<action> brakes;
-	double moveTime = 0;
-	double brakeTime = 0;
-	std::vector<geometry> geometryElements;
-	geometry g;
-	for (action a : actions)
-	{
-		std::cout << std::endl << "T: " << a.starttime;
-		avatar.position = sf::Vector2f(moveTime * avatar.speed.x, (a.starttime - brakeTime) * avatar.speed.y);
-		g.position = avatar.position;
-		std::cout << " P: " << g.position.x << ", " << g.position.y;
-		g.size = sf::Vector2f(avatar.speed.x * (a.stoptime - a.starttime), avatar.speed.y * (a.stoptime - a.starttime));
-		std::cout << " L: " << g.size.x << ", " << g.size.y;
-				
-		//Sortera handlingarna
-		if (a.word == brake)
-		{
-			brakes.push_back(a);
-			//Kolla samtida brake och move
-			if (!moves.empty() && !geometryElements.empty() && moves.back().starttime == a.starttime)
-			{
-				//modifiera senaste handlingen till att bli en mer tvär sväng åt samma riktning
-				geometryElements.back().size.y -= (a.stoptime - a.starttime) * avatar.speed.y;
-			}
-			else
-			{
-				g.type = keyword::moving_block_single;
-				g.size.y = 0;
-				geometryElements.push_back(g);
-				
-			}
-			brakeTime += a.stoptime - a.starttime;
-		}
-		else
-		{
-			moves.push_back(a);
-			//Kolla samtida brake och move
-			if (!brakes.empty() && !geometryElements.empty() && brakes.back().starttime == a.starttime)
-			{
-				//modifiera senaste handlingen till att bli en tvär sväng
-				//Det är just nu ett moving_block_single, men ska bli en move_(left|right)_ledge
-				// positionen kan behöva uppdateras
-				geometryElements.back().type = a.direction == left ? move_left_ledge : move_right_ledge;
-				if( brakes.back().stoptime == a.stoptime) brakes.back().stoptime = a.stoptime;
-				geometryElements.back().size.y = ((a.stoptime - a.starttime)-(brakes.back().stoptime - brakes.back().starttime)) * avatar.speed.y; 				
-			}
-			//Kolla om move har en brake direkt före alternativt överlappar något
-			//this only makes sense if braking means the avatar has a slower speed when it starts moving again
-			// or it is a vertically moving block
-			else if(!brakes.empty() && !geometryElements.empty() && brakes.back().stoptime >= a.starttime)
-			{
-				//modifiera senaste handlingen från att vara moving_block till att vara side_passage
-				geometryElements.back().type = a.direction == left ? move_left_passage : move_right_passage;				
-			}
-			else
-			{
-				g.type = a.direction == left ? keyword::move_left_ledge : keyword::move_right_ledge;
-				geometryElements.push_back(g);
-			}
-			moveTime += (a.stoptime - a.starttime) * a.direction == left ? -1 : 1;			
-		}
-	}
-	return geometryElements;
-}
-*/
-
 std::vector<sf::Shape*> LevelGenerator::GetShapes(std::vector<geometry> geometryElements, sf::Vector2f offset)
 {
 	std::vector<sf::Shape*> shapes;
-	
-	sf::Vector2f playerOffset = sf::Vector2f();
-	std::cout << std::endl;
+	std::vector<sf::Vector2f> rightSide;
+	std::vector<sf::Vector2f> leftSide;
 
+	float min_point = offset.x;
+	float max_point = offset.x;
+
+	int scale = avatar.size.y;
+	
+	int passWidth = 4 * scale;
+	float platformThickness = 1;
+	sf::Vector2f playerOffset = sf::Vector2f(scale, scale *2);
+
+	/*
 	sf::CircleShape* zero = new sf::CircleShape();
-	zero->setOutlineThickness(2);
+	zero->setOutlineThickness(-2);
 	zero->setOutlineColor(sf::Color::Cyan);
 	zero->setFillColor(sf::Color::Transparent);
-	zero->setRadius(5);
+	zero->setRadius(scale);
 	zero->setPointCount(3);
 	zero->setOrigin(zero->getLocalBounds().width / 2, zero->getLocalBounds().height / 2);
-	zero->setPosition(0, 0);
-	shapes.push_back(zero);
+	zero->setPosition(sf::Vector2f() + offset);
+	shapes.push_back(zero);	
+	rightSide.push_back(zero->getPosition() + sf::Vector2f(passWidth, 0));	
+	leftSide.push_back(zero->getPosition() - sf::Vector2f(passWidth, 0));	*/
 	
 	for (auto e : geometryElements)
 	{		
-		sf::RectangleShape* r = new sf::RectangleShape();		
+		sf::ConvexShape* r = new sf::ConvexShape();		
 
 		sf::CircleShape* c = new sf::CircleShape();
-		c->setOutlineThickness(2);
+		c->setOutlineThickness(-2);
 		c->setOutlineColor(sf::Color::White);
 		c->setFillColor(sf::Color::Transparent);
-		c->setRadius(5);
+		c->setRadius(scale/2);
 		c->setOrigin(c->getLocalBounds().width / 2, c->getLocalBounds().height / 2);				
-		c->setPosition(e.position);	
+		c->setPosition(e.position + offset);			
+		shapes.push_back(c);
 
-		float platformThickness = 2;
-
-		std::cout << "Position: " << e.position.x << ", " << e.position.y <<". Size: " << e.size.x << ", " << e.size.y << std::endl;
-		switch (e.type)		{
-
+		switch (e.type)		
+		{
 			case move_left_ledge:				
-				r->setOutlineThickness(-4);
-				r->setOutlineColor(sf::Color::Red);
-				r->setFillColor(sf::Color::Transparent);
-				r->setSize(e.size);
-				r->setOrigin(r->getLocalBounds().width, 0);
-				r->setPosition(e.position);
+				r->setOutlineThickness(-2);
+				r->setOutlineColor(sf::Color::Green);
+				r->setFillColor(sf::Color::Green);
+				r->setPointCount(4);
+					r->setPoint(0, sf::Vector2f(0, 0));
+					r->setPoint(1, sf::Vector2f(-e.size.x, e.size.y));
+					r->setPoint(2, sf::Vector2f(-e.size.x + platformThickness, e.size.y + platformThickness));
+					r->setPoint(3, sf::Vector2f(platformThickness, platformThickness));
+				r->setPosition(e.position + offset + playerOffset);
 				shapes.push_back(r);
+
+				rightSide.push_back(r->getPosition() + r->getPoint(0) + sf::Vector2f(platformThickness*2, 0));
+				rightSide.push_back(r->getPosition() + r->getPoint(1) + sf::Vector2f(platformThickness*2, 0));
+				leftSide.push_back(r->getPosition() + r->getPoint(1) - sf::Vector2f(passWidth, e.size.y < scale ? e.size.y/2 : passWidth));
+				leftSide.push_back(r->getPosition() + r->getPoint(1) - sf::Vector2f(passWidth, 0));
 				break;
 			case move_right_ledge:	
-				r->setOutlineThickness(-4);
-				r->setOutlineColor(sf::Color::Magenta);
-				r->setFillColor(sf::Color::Transparent);
-				r->setSize(e.size);				
-				r->setPosition(e.position);
+				r->setOutlineThickness(-2);
+				r->setOutlineColor(sf::Color::Green);
+				r->setFillColor(sf::Color::Green);
+				r->setPointCount(4);
+					r->setPoint(0, sf::Vector2f(0, 0));
+					r->setPoint(1, sf::Vector2f(e.size.x, e.size.y));
+					r->setPoint(2, sf::Vector2f(e.size.x - platformThickness, e.size.y + platformThickness));
+					r->setPoint(3, sf::Vector2f(-platformThickness, platformThickness));					
+				r->setPosition(e.position + offset + sf::Vector2f(-playerOffset.x, playerOffset.y));
 				shapes.push_back(r);
+
+				leftSide.push_back(r->getPosition() + r->getPoint(0) - sf::Vector2f(platformThickness*2, 0));
+				leftSide.push_back(r->getPosition() + r->getPoint(1) - sf::Vector2f(platformThickness*2, 0));
+				rightSide.push_back(r->getPosition() + r->getPoint(1) + sf::Vector2f(passWidth, -(e.size.y < scale ? e.size.y / 2 : passWidth)));
+				rightSide.push_back(r->getPosition() + r->getPoint(1) + sf::Vector2f(passWidth, 0));
+				break;
+
+			case move_left_hinder:
+				r->setOutlineThickness(-2);
+				r->setOutlineColor(sf::Color::Red);
+				r->setFillColor(sf::Color::Red);
+				r->setPointCount(4);
+				r->setPoint(0, sf::Vector2f(0, 0));
+				r->setPoint(1, sf::Vector2f(-e.size.x, e.size.y));
+				r->setPoint(2, sf::Vector2f(-e.size.x + scale, e.size.y + scale));
+				r->setPoint(3, sf::Vector2f(scale, scale));
+				r->setPosition(e.position + offset + playerOffset);
+				shapes.push_back(r);
+
+				rightSide.push_back(r->getPosition() + r->getPoint(0) + sf::Vector2f(scale, 0));
+				rightSide.push_back(r->getPosition() + r->getPoint(1) + sf::Vector2f(scale, 0));
+				leftSide.push_back(r->getPosition() + r->getPoint(1) - sf::Vector2f(passWidth, (e.size.y < scale ? e.size.y / 2 : passWidth)));
+				leftSide.push_back(r->getPosition() + r->getPoint(1) - sf::Vector2f(passWidth, 0));
+				break;
+			case move_right_hinder:
+				r->setOutlineThickness(-2);
+				r->setOutlineColor(sf::Color::Red);
+				r->setFillColor(sf::Color::Red);
+				r->setPointCount(4);
+				r->setPoint(0, sf::Vector2f(0, 0));
+				r->setPoint(1, sf::Vector2f(e.size.x, e.size.y));
+				r->setPoint(2, sf::Vector2f(e.size.x - scale, e.size.y + scale));
+				r->setPoint(3, sf::Vector2f(-scale, scale));
+				r->setPosition(e.position + offset + sf::Vector2f(-playerOffset.x, playerOffset.y));
+				shapes.push_back(r);
+
+				leftSide.push_back(r->getPosition() + r->getPoint(0) - sf::Vector2f(scale, 0));
+				leftSide.push_back(r->getPosition() + r->getPoint(1) - sf::Vector2f(scale, 0));
+				rightSide.push_back(r->getPosition() + r->getPoint(1) + sf::Vector2f(passWidth, -(e.size.y < scale ? e.size.y / 2 : passWidth)));
+				rightSide.push_back(r->getPosition() + r->getPoint(1) + sf::Vector2f(passWidth, 0));
 				break;
 			case moving_block_single:
 				r->setOutlineThickness(-4);
 				r->setOutlineColor(sf::Color::Blue);
 				r->setFillColor(sf::Color::Transparent);
-				r->setSize(e.size);
-				r->setOrigin(r->getLocalBounds().width/2, 0);
-				r->setPosition(e.position);
+				r->setPointCount(4);
+					r->setPoint(0, sf::Vector2f(0, 0));
+					r->setPoint(1, sf::Vector2f(scale, scale));
+					r->setPoint(2, sf::Vector2f(0, scale*2));
+					r->setPoint(3, sf::Vector2f(-scale, scale));
+				//r->setOrigin(r->getLocalBounds().width/2, 0);
+				r->setPosition(e.position + offset + sf::Vector2f(0, playerOffset.y));
 				shapes.push_back(r);
-				break;			
+
+				leftSide.push_back(r->getPosition() + r->getPoint(3) - sf::Vector2f(passWidth, 0));
+				rightSide.push_back(r->getPosition() + r->getPoint(1) + sf::Vector2f(passWidth, 0));
+				break;		
+			case platform:
+				break;
 			default:
 				break;
-		}
-		shapes.push_back(c);
+		}		
 	}
+	/*
+	sf::CircleShape* end = new sf::CircleShape();
+	end->setOutlineThickness(-2);
+	end->setOutlineColor(sf::Color::Magenta);
+	end->setFillColor(sf::Color::Transparent);
+	end->setRadius(scale);
+	end->setPointCount(3);
+	end->setOrigin(end->getLocalBounds().width / 2, end->getLocalBounds().height / 2);
+	end->setPosition(sf::Vector2f(0, passWidth) + shapes.back()->getPosition() + shapes.back()->getPoint(2));
+	shapes.push_back(end);
+	leftSide.push_back(end->getPosition() + sf::Vector2f(-passWidth, passWidth));
+	rightSide.push_back(end->getPosition() + sf::Vector2f(passWidth, passWidth));
+	*/
+	for (auto lp : leftSide)
+	{
+		if (lp.x < min_point)
+		{
+			min_point = lp.x;
+		}
+	}
+	for (auto rp : rightSide)
+	{
+		if (rp.x > max_point)
+		{
+			max_point = rp.x;
+		}
+	}		
 
+	sf::Color backgroundColor = sf::Color(255, 128, 0);
+	for (int i = 1; i < rightSide.size() - 1; i++)
+	{
+		sf::ConvexShape* boundariesRight = new sf::ConvexShape();
+		boundariesRight->setPointCount(4);
+		boundariesRight->setOutlineThickness(0);
+		boundariesRight->setOutlineColor(sf::Color::Red);
+		boundariesRight->setFillColor(backgroundColor);
+
+		boundariesRight->setPoint(0, rightSide[i - 1]);
+		boundariesRight->setPoint(1, rightSide[i]);
+		boundariesRight->setPoint(2, sf::Vector2f(max_point + passWidth * 3, rightSide[i].y));
+		boundariesRight->setPoint(3, sf::Vector2f(max_point + passWidth * 3, rightSide[i - 1].y));
+		shapes.push_back(boundariesRight);		
+	}
+	
+
+	
+	for (int i = 1; i < leftSide.size() - 1; i++)
+	{
+		sf::ConvexShape* boundariesLeft = new sf::ConvexShape();
+		boundariesLeft->setPointCount(4);
+		boundariesLeft->setOutlineThickness(0);
+		boundariesLeft->setOutlineColor(sf::Color::Red);
+		boundariesLeft->setFillColor(backgroundColor);
+
+		boundariesLeft->setPoint(0, leftSide[i - 1]);
+		boundariesLeft->setPoint(1, leftSide[i]);
+		boundariesLeft->setPoint(2, sf::Vector2f(min_point - passWidth * 3, leftSide[i].y));
+		boundariesLeft->setPoint(3, sf::Vector2f(min_point - passWidth * 3, leftSide[i - 1].y));
+		shapes.push_back(boundariesLeft);
+	}
+	
 	return shapes;
 }

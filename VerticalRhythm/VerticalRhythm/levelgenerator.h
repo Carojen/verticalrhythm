@@ -57,8 +57,9 @@ enum keyword
 	move_left_ledge,
 	move_right_ledge,
 	moving_block_single,
-	move_left_passage,
-	move_right_passage,
+	platform,
+	move_left_hinder,
+	move_right_hinder,
 	other
 };
 
@@ -104,8 +105,8 @@ struct rhythmgroup
 
 struct player
 {
-	sf::Vector2f speed = sf::Vector2f(10, 10);
-	//sf::Vector2f size = sf::Vector2f(64, 64);
+	sf::Vector2f speed = sf::Vector2f(30, 30);
+	sf::Vector2f size = sf::Vector2f(5, 5);
 	double brakeTime = 5.0;
 	double gravity = 9.82;
 	sf::Vector2f position = sf::Vector2f();
@@ -122,8 +123,6 @@ public:
 	std::vector<action> createActions(std::vector<double> beats);
 	std::vector<action> createActions(rhythm r);
 	std::vector<geometry> GetGeometry(std::vector<action> actions);
-	geometry ActionToGeometry(action a);
-	std::vector<geometry> GetGeometry2(std::vector<action> actions);
 	std::vector<geometry> createGeometry(rhythm r);
 	std::vector<sf::Shape*> GetShapes(std::vector<geometry> geometryElements, sf::Vector2f offset = sf::Vector2f());
 	player avatar;

@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include "levelgenerator.h"
+
 int main()
 {
 	sf::RenderWindow window(sf::VideoMode(1024, 728), "Rhythm");
@@ -13,15 +14,20 @@ int main()
 	sf::View view = window.getDefaultView();
 	view.zoom(2.0f);
 	window.setView(view);
-
 	
 	rhythm r;
+	r.type = swing;
+	r.length = 20;
 	sf::Vector2f offset  = sf::Vector2f();			
-	std::vector<action> actions = LevelGenerator::instance().createActions(r);
+	std::vector<double> beats = LevelGenerator::instance().GetBeats(r);
+
+	
+
+
+	std::vector<action> actions = LevelGenerator::instance().createActions(beats);
 	std::vector<geometry> blocks = LevelGenerator::instance().GetGeometry(actions);
 	ObjectManager::instance().addShapes(LevelGenerator::instance().GetShapes(blocks, offset));
-	
-	
+		
 	sf::Time time;
 	sf::Clock clock;
 
@@ -35,6 +41,13 @@ int main()
 			if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 			{
 				window.close();
+			}
+			else if (event.type == sf::Event::KeyPressed && sf::Keyboard::isKeyPressed(sf::Keyboard::R))
+			{							
+				offset.x += 400;
+				actions = LevelGenerator::instance().createActions(r);
+				blocks = LevelGenerator::instance().GetGeometry(actions);
+				ObjectManager::instance().addShapes(LevelGenerator::instance().GetShapes(blocks, offset));
 			}
 			else if (event.type == sf::Event::KeyPressed && sf::Keyboard::isKeyPressed(sf::Keyboard::P))
 			{

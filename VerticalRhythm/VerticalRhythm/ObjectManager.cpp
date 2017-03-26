@@ -15,6 +15,11 @@ ObjectManager::~ObjectManager()
 		delete mTiles[mTiles.size() - 1];
 		mTiles.pop_back();
 	}
+	while (mShapes.size() > 0)
+	{
+		delete mShapes[mShapes.size() - 1];
+		mShapes.pop_back();
+	}
 }
 
 ObjectManager& ObjectManager::instance()
