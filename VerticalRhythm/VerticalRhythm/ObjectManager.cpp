@@ -134,3 +134,16 @@ std::vector<sf::Shape*>& ObjectManager::GetShapes()
 {
 	return instance().mShapes;
 }
+
+std::vector<GameObject*>& ObjectManager::GetGameObjects()
+{
+	return mGameObjects;
+}
+
+void ObjectManager::addGameObjects(std::vector<GameObject*> objects)
+{
+	for(auto o : objects)
+	{
+		mGameObjects.push_back(o);
+	}
+}

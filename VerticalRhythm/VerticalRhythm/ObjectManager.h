@@ -5,6 +5,7 @@
 
 struct rhythm;
 struct action;
+class GameObject;
 
 class ObjectManager
 {
@@ -18,10 +19,13 @@ public:
 	void createLevel();
 	void addShapes(std::vector<sf::Shape*> shapes);
 	static std::vector<sf::Shape*>& GetShapes();
+	std::vector<GameObject*>& GetGameObjects();
+	void addGameObjects(std::vector<GameObject*> objects);
 private:
 	ObjectManager();
 	std::vector<Tile*> mTiles;
 	std::vector<sf::Shape*> mShapes;
+	std::vector<GameObject*> mGameObjects;
 };
 
 #endif

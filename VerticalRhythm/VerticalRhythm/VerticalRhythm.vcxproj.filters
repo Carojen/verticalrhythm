@@ -48,6 +48,12 @@
     <ClCompile Include="levelgenerator.cpp">
       <Filter>Source Files\Levelgenerator</Filter>
     </ClCompile>
+    <ClCompile Include="gameobject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="level.cpp">
+      <Filter>Source Files\Levelgenerator</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resourcemanager.h">
@@ -66,6 +72,15 @@
       <Filter>Header Files\Player</Filter>
     </ClInclude>
     <ClInclude Include="levelgenerator.h">
+      <Filter>Header Files\Levelgenerator</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="levelModel.h">
+      <Filter>Header Files\Levelgenerator</Filter>
+    </ClInclude>
+    <ClInclude Include="level.h">
       <Filter>Header Files\Levelgenerator</Filter>
     </ClInclude>
   </ItemGroup>

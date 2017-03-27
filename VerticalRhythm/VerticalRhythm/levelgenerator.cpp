@@ -1,6 +1,8 @@
 #include "levelgenerator.h"
 #include "ObjectManager.h"
 #include <iostream>
+#include "gameobject.h"
+
 
 
 LevelGenerator::LevelGenerator()
@@ -90,7 +92,7 @@ std::vector<double> LevelGenerator::GetBeats(rhythm r)
 	return beats;
 }
 
-std::vector<action> LevelGenerator::createActions(std::vector<double> beats)
+std::vector<action> LevelGenerator::createActions(std::vector<double> beats, float offset)
 {	
 	std::vector<action> actions;
 	//Kolla hur lång rytmen är
@@ -100,7 +102,7 @@ std::vector<action> LevelGenerator::createActions(std::vector<double> beats)
 		rhythmLength += n;
 	}
 	int randomValue = std::rand() % 2;
-	double currentTime = 0;
+	double currentTime = offset;
 
 	for (int i = 0; i < beats.size(); i++)
 	{		
@@ -146,9 +148,9 @@ std::vector<action> LevelGenerator::createActions(std::vector<double> beats)
 	return actions;
 }
 
-std::vector<action> LevelGenerator::createActions(rhythm r)
+std::vector<action> LevelGenerator::createActions(rhythm r, float offset)
 {
-	return createActions(GetBeats(r));
+	return createActions(GetBeats(r), offset);
 }
 
 std::vector<geometry> LevelGenerator::createGeometry(rhythm r)
@@ -165,7 +167,6 @@ std::vector<geometry> LevelGenerator::GetGeometry(std::vector<action> actions)
 
 	for (action a : actions)
 	{
-		std::cout << "Current time: " << currentTime << " length: " << a.stoptime - a.starttime << std::endl;
 		currentTime = a.starttime;
 		avatar.position.x = moveTime * avatar.speed.x;
 		avatar.position.y = (currentTime - brakeTime) * avatar.speed.y;
@@ -197,6 +198,26 @@ std::vector<geometry> LevelGenerator::GetGeometry(std::vector<action> actions)
 	return geometryElements;
 }
 
+std::vector<GameObject*> LevelGenerator::GetLevelObjects(std::vector<action> actions, sf::Vector2f offset)
+{
+	return GetLevelObjects(GetGeometry(actions), offset);
+}
+
+std::vector<GameObject*> LevelGenerator::GetLevelObjects(std::vector<geometry> geometryElements, sf::Vector2f offset)
+{
+	std::vector<GameObject*> gameObjects;
+
+	for (auto e : geometryElements)
+	{
+		gameObjects.push_back(new GameObject(e.type, e.position + offset, e.size, std::max(avatar.scale.x, avatar.scale.y)));
+	}
+
+	return gameObjects;
+
+}
+
+//Ska enbart ha hand om utritningen av bansegmenten och inte påverka resultatet
+//scale, platformThickness och passWidth bör därmed sättas tidigare
 std::vector<sf::Shape*> LevelGenerator::GetShapes(std::vector<geometry> geometryElements, sf::Vector2f offset)
 {
 	std::vector<sf::Shape*> shapes;
@@ -206,8 +227,7 @@ std::vector<sf::Shape*> LevelGenerator::GetShapes(std::vector<geometry> geometry
 	float min_point = offset.x;
 	float max_point = offset.x;
 
-	int scale = avatar.size.y;
-	
+	int scale = avatar.scale.y;	
 	int passWidth = 4 * scale;
 	float platformThickness = 1;
 	sf::Vector2f playerOffset = sf::Vector2f(scale, scale *2);
@@ -374,9 +394,7 @@ std::vector<sf::Shape*> LevelGenerator::GetShapes(std::vector<geometry> geometry
 		boundariesRight->setPoint(3, sf::Vector2f(max_point + passWidth * 3, rightSide[i - 1].y));
 		shapes.push_back(boundariesRight);		
 	}
-	
 
-	
 	for (int i = 1; i < leftSide.size() - 1; i++)
 	{
 		sf::ConvexShape* boundariesLeft = new sf::ConvexShape();

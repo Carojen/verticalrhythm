@@ -4,6 +4,8 @@
 #include <iostream>
 #include <vector>
 #include "levelgenerator.h"
+#include "gameobject.h"
+#include "level.h"
 
 int main()
 {
@@ -20,13 +22,26 @@ int main()
 	r.length = 20;
 	sf::Vector2f offset  = sf::Vector2f();			
 	std::vector<double> beats = LevelGenerator::instance().GetBeats(r);
-
-	
-
-
 	std::vector<action> actions = LevelGenerator::instance().createActions(beats);
 	std::vector<geometry> blocks = LevelGenerator::instance().GetGeometry(actions);
-	ObjectManager::instance().addShapes(LevelGenerator::instance().GetShapes(blocks, offset));
+	//ObjectManager::instance().addShapes(LevelGenerator::instance().GetShapes(blocks, offset));
+
+	offset = sf::Vector2f(-400, -400);
+	//ObjectManager::instance().addGameObjects(LevelGenerator::instance().GetLevelObjects(blocks, offset));
+
+	std::vector<rhythm> rhythms;
+
+	for (int i = 0; i < 10; i++)
+	{
+		r.density = (Density) (rand() % 3);
+		r.length = ((rand() % 4) + 1) * 5;
+		r.type = (RhythmType)(rand() % 2);
+		rhythms.push_back(r);
+		std::cout << "Rhythm " << i << ": " << "d=" << (int)r.density << " l=" << r.length << " t=" << r.type << std::endl;
+	}	
+
+	Level level = Level(rhythms, std::vector<action>(), offset);
+	ObjectManager::instance().addGameObjects(level.GetGameObjects());
 		
 	sf::Time time;
 	sf::Clock clock;
@@ -107,6 +122,11 @@ int main()
 		for (auto s : ObjectManager::instance().GetShapes())
 		{
 			window.draw(*s);
+		}
+
+		for (auto go : ObjectManager::instance().GetGameObjects())
+		{
+			window.draw(*(go->GetShape()));
 		}
 		
 		window.display();

@@ -130,6 +130,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="animation.cpp" />
+    <ClCompile Include="gameobject.cpp" />
+    <ClCompile Include="level.cpp" />
     <ClCompile Include="levelgenerator.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ObjectManager.cpp" />
@@ -139,7 +141,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="animation.h" />
+    <ClInclude Include="gameobject.h" />
+    <ClInclude Include="level.h" />
     <ClInclude Include="levelgenerator.h" />
+    <ClInclude Include="levelModel.h" />
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="resourcemanager.h" />
