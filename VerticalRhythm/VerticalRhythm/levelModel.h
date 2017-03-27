@@ -22,7 +22,8 @@ enum RhythmType
 enum Verb
 {
 	move,
-	brake
+	brake,
+	wait
 };
 
 enum Direction

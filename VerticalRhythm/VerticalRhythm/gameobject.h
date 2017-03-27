@@ -19,6 +19,7 @@ public:
 	sf::Vector2f GetPosition();
 	void SetPosition(sf::Vector2f position);		
 	sf::Vector2f GetSize();
+	keyword GetType();
 	
 private:
 	sf::Shape* mShape;

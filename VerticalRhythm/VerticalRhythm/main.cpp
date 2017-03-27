@@ -7,6 +7,27 @@
 #include "gameobject.h"
 #include "level.h"
 
+void createLevel(sf::Vector2f offset = sf::Vector2f())
+{
+	rhythm r;
+	std::vector<rhythm> rhythms;
+
+	for (int i = 0; i < 10; i++)
+	{
+		r.density = (Density)(rand() % 3);
+		r.length = ((rand() % 4) + 1) * 5;
+		r.type = (RhythmType)(rand() % 2);
+		rhythms.push_back(r);
+		std::cout << "Rhythm " << i << ": " << "d=" << (int)r.density << " l=" << r.length << " t=" << r.type << std::endl;
+	}
+
+	Level level = Level(rhythms, std::vector<action>(), offset);
+	ObjectManager::instance().addGameObjects(level.GetGameObjects());
+
+	std::cout << "Linearity: " << level.GetLinearity() << " Forgiveness ratio: " << level.GetForgivenessRatio() << " Length: " << level.GetLength() << std::endl;
+
+}
+
 int main()
 {
 	sf::RenderWindow window(sf::VideoMode(1024, 728), "Rhythm");
@@ -16,35 +37,10 @@ int main()
 	sf::View view = window.getDefaultView();
 	view.zoom(2.0f);
 	window.setView(view);
-	
-	rhythm r;
-	r.type = swing;
-	r.length = 20;
-	sf::Vector2f offset  = sf::Vector2f();			
-	std::vector<double> beats = LevelGenerator::instance().GetBeats(r);
-	std::vector<action> actions = LevelGenerator::instance().createActions(beats);
-	std::vector<geometry> blocks = LevelGenerator::instance().GetGeometry(actions);
-	//ObjectManager::instance().addShapes(LevelGenerator::instance().GetShapes(blocks, offset));
-
-	offset = sf::Vector2f(-400, -400);
-	//ObjectManager::instance().addGameObjects(LevelGenerator::instance().GetLevelObjects(blocks, offset));
-
-	std::vector<rhythm> rhythms;
-
-	for (int i = 0; i < 10; i++)
-	{
-		r.density = (Density) (rand() % 3);
-		r.length = ((rand() % 4) + 1) * 5;
-		r.type = (RhythmType)(rand() % 2);
-		rhythms.push_back(r);
-		std::cout << "Rhythm " << i << ": " << "d=" << (int)r.density << " l=" << r.length << " t=" << r.type << std::endl;
-	}	
-
-	Level level = Level(rhythms, std::vector<action>(), offset);
-	ObjectManager::instance().addGameObjects(level.GetGameObjects());
-		
+			
 	sf::Time time;
 	sf::Clock clock;
+	sf::Vector2f offset;
 
 	bool isPaused = false;
 
@@ -58,11 +54,9 @@ int main()
 				window.close();
 			}
 			else if (event.type == sf::Event::KeyPressed && sf::Keyboard::isKeyPressed(sf::Keyboard::R))
-			{							
-				offset.x += 400;
-				actions = LevelGenerator::instance().createActions(r);
-				blocks = LevelGenerator::instance().GetGeometry(actions);
-				ObjectManager::instance().addShapes(LevelGenerator::instance().GetShapes(blocks, offset));
+			{				
+				offset.x += 500;
+				createLevel(offset);
 			}
 			else if (event.type == sf::Event::KeyPressed && sf::Keyboard::isKeyPressed(sf::Keyboard::P))
 			{
@@ -109,21 +103,10 @@ int main()
 
 		if (!isPaused)
 		{
-		}
-		
+		}		
 
 		window.clear();
-
-		for (auto t : ObjectManager::instance().GetTiles())
-		{
-			t->render(window);
-		}
-
-		for (auto s : ObjectManager::instance().GetShapes())
-		{
-			window.draw(*s);
-		}
-
+		
 		for (auto go : ObjectManager::instance().GetGameObjects())
 		{
 			window.draw(*(go->GetShape()));

@@ -144,6 +144,12 @@ std::vector<action> LevelGenerator::createActions(std::vector<double> beats, flo
 
 		randomValue = rand() % 2;				
 	}
+
+	action last;
+	last.word = wait;
+	last.starttime = currentTime + beats[0];
+	last.stoptime = last.starttime + beats[0];
+	actions.push_back(last);
 	
 	return actions;
 }
@@ -192,6 +198,11 @@ std::vector<geometry> LevelGenerator::GetGeometry(std::vector<action> actions)
 			g.position = avatar.position;
 			g.size.x = 200;
 			g.size.y = 1;
+		}
+		else if(a.word == wait)
+		{
+			g.type = platform;
+			g.position = avatar.position;
 		}
 		geometryElements.push_back(g);
 	}
