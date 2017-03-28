@@ -196,8 +196,8 @@ std::vector<geometry> LevelGenerator::GetGeometry(std::vector<action> actions)
 			brakeTime += a.stoptime - a.starttime;
 			g.type = moving_block_single;
 			g.position = avatar.position;
-			g.size.x = 200;
-			g.size.y = 1;
+			g.size.x = -1;
+			g.size.y = a.stoptime - a.starttime;
 		}
 		else if(a.word == wait)
 		{

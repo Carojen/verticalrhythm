@@ -81,6 +81,103 @@ struct player
 	sf::Vector2f position = sf::Vector2f();
 };
 
+class MyEnums
+{
+public:
+	static std::string ToString(Density value)
+	{
+		std::string outString;
+
+		switch (value)
+		{
+		case low:
+			outString = "low";
+			break;
+		case medium:
+			outString = "medium";
+		case high:
+			outString = "high";
+			break;
+		default:
+			break;
+		}
+		return outString;
+	}
+
+	static std::string ToString(RhythmType value)
+	{
+		std::string outString;
+
+		switch (value)
+		{
+		case regular:
+			outString = "regular";
+			break;
+		case swing:
+			outString = "swing";
+		case random:
+			outString = "random";
+			break;
+		default:
+			break;
+		}
+		return outString;
+	}
+
+	static std::string ToString(Verb value)
+	{
+		std::string outString;
+
+		switch (value)
+		{
+		case move:
+			outString = "move";
+			break;
+		case brake:
+			outString = "brake";
+		case wait:
+			outString = "wait";
+			break;
+		default:
+			break;
+		}
+		return outString;
+	}
+
+	static std::string ToString(keyword value)
+	{
+		std::string outString;
+
+		switch (value)
+		{
+		case move_left_ledge:
+			outString = "move_left_ledge";
+			break;
+		case move_right_ledge:
+			outString = "move_right_ledge";
+			break;
+		case moving_block_single:
+			outString = "moving_block_single";
+			break;
+		case platform:
+			outString = "platform";
+			break;
+		case move_left_hinder:
+			outString = "move_left_hinder";
+			break;
+		case move_right_hinder:
+			outString = "move_left_hinder";
+			break;
+		case other:
+			outString = "other";
+			break;
+		default:
+			break;
+		}
+		return outString;
+	}
+};
+
 
 
 #endif

@@ -7,7 +7,8 @@
 #include "gameobject.h"
 #include "level.h"
 
-void createLevel(sf::Vector2f offset = sf::Vector2f())
+
+Level createLevel(sf::Vector2f offset = sf::Vector2f())
 {
 	rhythm r;
 	std::vector<rhythm> rhythms;
@@ -18,14 +19,21 @@ void createLevel(sf::Vector2f offset = sf::Vector2f())
 		r.length = ((rand() % 4) + 1) * 5;
 		r.type = (RhythmType)(rand() % 2);
 		rhythms.push_back(r);
-		std::cout << "Rhythm " << i << ": " << "d=" << (int)r.density << " l=" << r.length << " t=" << r.type << std::endl;
+		std::cout << "Rhythm " << i << ": " <<  MyEnums::ToString(r.density) << ", " << MyEnums::ToString(r.type) << ", " << r.length << std::endl;
 	}
 
 	Level level = Level(rhythms, std::vector<action>(), offset);
 	ObjectManager::instance().addGameObjects(level.GetGameObjects());
+	ObjectManager::instance().addShapes(level.GetOutline());
+
+
+	for (auto go : level.GetGameObjects())
+	{
+		std::cout << go->toString() << std::endl;
+	}
 
 	std::cout << "Linearity: " << level.GetLinearity() << " Forgiveness ratio: " << level.GetForgivenessRatio() << " Length: " << level.GetLength() << std::endl;
-
+	return level;
 }
 
 int main()
@@ -55,7 +63,7 @@ int main()
 			}
 			else if (event.type == sf::Event::KeyPressed && sf::Keyboard::isKeyPressed(sf::Keyboard::R))
 			{				
-				offset.x += 500;
+				offset.x += 1000;
 				createLevel(offset);
 			}
 			else if (event.type == sf::Event::KeyPressed && sf::Keyboard::isKeyPressed(sf::Keyboard::P))
@@ -99,18 +107,28 @@ int main()
 				window.setView(view);
 			}
 		}
+		for (auto go : ObjectManager::instance().GetGameObjects())
+		{
+			go->update(time);
+		}
+
 		time = clock.restart();
 
 		if (!isPaused)
 		{
-		}		
-
+		}
+		
 		window.clear();
 		
 		for (auto go : ObjectManager::instance().GetGameObjects())
 		{
 			window.draw(*(go->GetShape()));
 		}
+		for (auto shape : ObjectManager::instance().GetShapes())
+		{
+			window.draw(*shape);
+		}
+		
 		
 		window.display();
 	}

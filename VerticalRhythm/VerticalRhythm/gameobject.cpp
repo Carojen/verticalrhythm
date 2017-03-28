@@ -1,6 +1,7 @@
 #include "gameobject.h"
 #include <SFML\Graphics\ConvexShape.hpp>
 #include "levelgenerator.h"
+#include <SFML\System\Time.hpp>
 
 
 
@@ -15,13 +16,34 @@ GameObject::~GameObject()
 {
 }
 
-void GameObject::update()
+void GameObject::update(sf::Time& time)
 {
+	if (mType == moving_block_single)
+	{		
+		//mTime == 3 steg
+		//totalt omlopp = 12 steg = mTime*4;
+		//totalt omlopp = mSize.x * 1.5;
+		//60 frames per sekund
+		//ändra positionen för mShape
+		//antal frames = mTime * 4 * 60;
+		//förändring per frame = mSize.x * 1.5 / (mTime * 4 * 60);
+
+
+
+	}
 }
 
 
 void GameObject::draw()
 {
+}
+
+std::string GameObject::toString()
+{
+	std::string goString = MyEnums::ToString(mType);
+	
+	goString += "(" + std::to_string(mPosition.x) + ", " + std::to_string(mPosition.y) + ")";
+	return goString;
 }
 
 
@@ -55,6 +77,11 @@ sf::Vector2f GameObject::GetSize()
 keyword GameObject::GetType()
 {
 	return mType;
+}
+
+std::vector<sf::Vector2f> GameObject::GetPoints()
+{
+	return mSurroundingPoints;
 }
 
 void GameObject::SetShape(keyword aType, sf::Vector2f size, float scale)
@@ -127,6 +154,8 @@ void GameObject::SetShape(keyword aType, sf::Vector2f size, float scale)
 		mSurroundingPoints.push_back(shape->getPosition() + shape->getPoint(1) - sf::Vector2f(scale, 0));		
 		break;
 	case moving_block_single:
+		mTime = size.y;
+		mSize.x = passWidth * 2;
 		shape->setOutlineThickness(0);
 		shape->setOutlineColor(sf::Color::Blue);
 		shape->setFillColor(sf::Color::Blue);
