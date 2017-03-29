@@ -1,14 +1,14 @@
 #ifndef  GAMEOBJECT_H
 #define GAMEOBJECT_H
 #include <vector>
-#include <SFML\Graphics\Shape.hpp>
 #include <SFML\System\Vector2.hpp>
 
 enum keyword;
 
 namespace sf
 {
-	class sf::Time;
+	class Time;
+	class Shape;
 }
 
 class GameObject

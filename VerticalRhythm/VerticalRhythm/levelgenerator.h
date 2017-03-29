@@ -2,13 +2,15 @@
 #define LEVELGENERATOR_H
 #include <string>
 #include <vector>
-#include <list>
-#include <queue>
 #include <SFML\System\Vector2.hpp>
-#include <SFML\Graphics\Shape.hpp>
 #include "levelModel.h"
 
 class GameObject;
+
+namespace sf
+{
+	class Shape;
+}
 class LevelGenerator
 {
 public:

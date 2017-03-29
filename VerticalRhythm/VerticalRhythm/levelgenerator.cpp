@@ -2,6 +2,11 @@
 #include "ObjectManager.h"
 #include <iostream>
 #include "gameobject.h"
+#include <stdlib.h>
+#include <time.h>
+#include <algorithm>
+#include <SFML\Graphics\ConvexShape.hpp>
+#include <SFML\Graphics\CircleShape.hpp>
 
 
 
@@ -147,7 +152,7 @@ std::vector<action> LevelGenerator::createActions(std::vector<double> beats, flo
 
 	action last;
 	last.word = wait;
-	last.starttime = currentTime + beats[0];
+	last.starttime = currentTime + beats[0]*2;
 	last.stoptime = last.starttime + beats[0];
 	actions.push_back(last);
 	

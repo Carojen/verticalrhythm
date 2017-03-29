@@ -13,14 +13,8 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\Player">
-      <UniqueIdentifier>{06d899f1-18de-495e-8037-503782499dbc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Levelgenerator">
       <UniqueIdentifier>{c4b0ed58-3726-4f05-a4c8-114c4535b46a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Player">
-      <UniqueIdentifier>{6c0aea9d-41ee-4fdd-ab64-3d7456f23fbc}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\Levelgenerator">
       <UniqueIdentifier>{2dc6690d-4353-41f3-997b-49f2c0f77b1e}</UniqueIdentifier>
@@ -35,15 +29,6 @@
     </ClCompile>
     <ClCompile Include="ObjectManager.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="tile.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="animation.cpp">
-      <Filter>Source Files\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="player.cpp">
-      <Filter>Source Files\Player</Filter>
     </ClCompile>
     <ClCompile Include="levelgenerator.cpp">
       <Filter>Source Files\Levelgenerator</Filter>
@@ -62,14 +47,8 @@
     <ClInclude Include="animation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="tile.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ObjectManager.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="player.h">
-      <Filter>Header Files\Player</Filter>
     </ClInclude>
     <ClInclude Include="levelgenerator.h">
       <Filter>Header Files\Levelgenerator</Filter>

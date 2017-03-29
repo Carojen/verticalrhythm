@@ -102,10 +102,10 @@ void GameObject::SetShape(keyword aType, sf::Vector2f size, float scale)
 		shape->setPoint(2, sf::Vector2f(-size.x + platformThickness, size.y + platformThickness));
 		shape->setPoint(3, sf::Vector2f(platformThickness, platformThickness));
 		shape->setOrigin(-scale, -scale * 2);
-		mSurroundingPoints.push_back(shape->getPosition() + shape->getPoint(0) + sf::Vector2f(platformThickness * 2, 0));
-		mSurroundingPoints.push_back(shape->getPosition() + shape->getPoint(1) + sf::Vector2f(platformThickness * 2, 0));
-		mSurroundingPoints.push_back(shape->getPosition() + shape->getPoint(1) - sf::Vector2f(passWidth, size.y < scale ? size.y / 2 : passWidth));
-		mSurroundingPoints.push_back(shape->getPosition() + shape->getPoint(1) - sf::Vector2f(passWidth, 0));
+		mSurroundingPoints.push_back(shape->getPosition() - shape->getOrigin() + shape->getPoint(0) + sf::Vector2f(platformThickness * 2, 0));
+		mSurroundingPoints.push_back(shape->getPosition() - shape->getOrigin() + shape->getPoint(1) + sf::Vector2f(platformThickness * 2, 0));
+		mSurroundingPoints.push_back(shape->getPosition() - shape->getOrigin() + shape->getPoint(1) - sf::Vector2f(passWidth, size.y < scale ? size.y / 2 : passWidth));
+		mSurroundingPoints.push_back(shape->getPosition() - shape->getOrigin() + shape->getPoint(1) - sf::Vector2f(passWidth, 0));
 		break;
 	case move_right_ledge:
 		shape->setOutlineThickness(0);
@@ -117,10 +117,10 @@ void GameObject::SetShape(keyword aType, sf::Vector2f size, float scale)
 		shape->setPoint(2, sf::Vector2f(size.x - platformThickness, size.y + platformThickness));
 		shape->setPoint(3, sf::Vector2f(-platformThickness, platformThickness));
 		shape->setOrigin(scale, -scale * 2);
-		mSurroundingPoints.push_back(shape->getPosition() + shape->getPoint(1) + sf::Vector2f(passWidth, -(size.y < scale ? size.y / 2 : passWidth)));
-		mSurroundingPoints.push_back(shape->getPosition() + shape->getPoint(1) + sf::Vector2f(passWidth, 0));
-		mSurroundingPoints.push_back(shape->getPosition() + shape->getPoint(0) - sf::Vector2f(platformThickness * 2, 0));
-		mSurroundingPoints.push_back(shape->getPosition() + shape->getPoint(1) - sf::Vector2f(platformThickness * 2, 0));		
+		mSurroundingPoints.push_back(shape->getPosition() - shape->getOrigin() + shape->getPoint(1) + sf::Vector2f(passWidth, -(size.y < scale ? size.y / 2 : passWidth)));
+		mSurroundingPoints.push_back(shape->getPosition() - shape->getOrigin() + shape->getPoint(1) + sf::Vector2f(passWidth, 0));
+		mSurroundingPoints.push_back(shape->getPosition() - shape->getOrigin() + shape->getPoint(0) - sf::Vector2f(platformThickness * 2, 0));
+		mSurroundingPoints.push_back(shape->getPosition() - shape->getOrigin() + shape->getPoint(1) - sf::Vector2f(platformThickness * 2, 0));
 		break;
 
 	case move_left_hinder:
@@ -133,10 +133,10 @@ void GameObject::SetShape(keyword aType, sf::Vector2f size, float scale)
 		shape->setPoint(2, sf::Vector2f(-size.x + scale, size.y + scale));
 		shape->setPoint(3, sf::Vector2f(scale, scale));
 		shape->setOrigin(-scale, -scale * 2);
-		mSurroundingPoints.push_back(shape->getPosition() + shape->getPoint(0) + sf::Vector2f(scale, 0));
-		mSurroundingPoints.push_back(shape->getPosition() + shape->getPoint(1) + sf::Vector2f(scale, 0));
-		mSurroundingPoints.push_back(shape->getPosition() + shape->getPoint(1) - sf::Vector2f(passWidth, (size.y < scale ? size.y / 2 : passWidth)));
-		mSurroundingPoints.push_back(shape->getPosition() + shape->getPoint(1) - sf::Vector2f(passWidth, 0));
+		mSurroundingPoints.push_back(shape->getPosition() - shape->getOrigin() + shape->getPoint(0) + sf::Vector2f(scale, 0));
+		mSurroundingPoints.push_back(shape->getPosition() - shape->getOrigin() + shape->getPoint(1) + sf::Vector2f(scale, 0));
+		mSurroundingPoints.push_back(shape->getPosition() - shape->getOrigin() + shape->getPoint(1) - sf::Vector2f(passWidth, (size.y < scale ? size.y / 2 : passWidth)));
+		mSurroundingPoints.push_back(shape->getPosition() - shape->getOrigin() + shape->getPoint(1) - sf::Vector2f(passWidth, 0));
 		break;
 	case move_right_hinder:
 		shape->setOutlineThickness(0);
@@ -148,10 +148,10 @@ void GameObject::SetShape(keyword aType, sf::Vector2f size, float scale)
 		shape->setPoint(2, sf::Vector2f(size.x - scale, size.y + scale));
 		shape->setPoint(3, sf::Vector2f(-scale, scale));
 		shape->setOrigin(scale, -scale * 2);
-		mSurroundingPoints.push_back(shape->getPosition() + shape->getPoint(1) + sf::Vector2f(passWidth, -(size.y < scale ? size.y / 2 : passWidth)));
-		mSurroundingPoints.push_back(shape->getPosition() + shape->getPoint(1) + sf::Vector2f(passWidth, 0));
-		mSurroundingPoints.push_back(shape->getPosition() + shape->getPoint(0) - sf::Vector2f(scale, 0));
-		mSurroundingPoints.push_back(shape->getPosition() + shape->getPoint(1) - sf::Vector2f(scale, 0));		
+		mSurroundingPoints.push_back(shape->getPosition() - shape->getOrigin() + shape->getPoint(1) + sf::Vector2f(passWidth, -(size.y < scale ? size.y / 2 : passWidth)));
+		mSurroundingPoints.push_back(shape->getPosition() - shape->getOrigin() + shape->getPoint(1) + sf::Vector2f(passWidth, 0));
+		mSurroundingPoints.push_back(shape->getPosition() - shape->getOrigin() + shape->getPoint(0) - sf::Vector2f(scale, 0));
+		mSurroundingPoints.push_back(shape->getPosition() - shape->getOrigin() + shape->getPoint(1) - sf::Vector2f(scale, 0));		
 		break;
 	case moving_block_single:
 		mTime = size.y;
@@ -165,10 +165,10 @@ void GameObject::SetShape(keyword aType, sf::Vector2f size, float scale)
 		shape->setPoint(2, sf::Vector2f(0, scale * 2));
 		shape->setPoint(3, sf::Vector2f(-scale, scale));
 		shape->setOrigin(0, -scale * 2);
-		mSurroundingPoints.push_back(shape->getPosition() + shape->getPoint(0) + sf::Vector2f(passWidth, 0));
-		mSurroundingPoints.push_back(shape->getPosition() + shape->getPoint(2) + sf::Vector2f(passWidth, 0));
-		mSurroundingPoints.push_back(shape->getPosition() + shape->getPoint(0) - sf::Vector2f(passWidth, 0));
-		mSurroundingPoints.push_back(shape->getPosition() + shape->getPoint(2) - sf::Vector2f(passWidth, 0));
+		mSurroundingPoints.push_back(shape->getPosition() - shape->getOrigin() + shape->getPoint(0) + sf::Vector2f(passWidth, 0));
+		mSurroundingPoints.push_back(shape->getPosition() - shape->getOrigin() + shape->getPoint(2) + sf::Vector2f(passWidth, 0));
+		mSurroundingPoints.push_back(shape->getPosition() - shape->getOrigin() + shape->getPoint(0) - sf::Vector2f(passWidth, 0));
+		mSurroundingPoints.push_back(shape->getPosition() - shape->getOrigin() + shape->getPoint(2) - sf::Vector2f(passWidth, 0));
 		break;
 	case platform:
 		shape->setOutlineThickness(2);
@@ -180,10 +180,10 @@ void GameObject::SetShape(keyword aType, sf::Vector2f size, float scale)
 		shape->setPoint(2, sf::Vector2f(scale, platformThickness));
 		shape->setPoint(3, sf::Vector2f(-scale, platformThickness));
 		shape->setOrigin(0, -scale * 2);
-		mSurroundingPoints.push_back(shape->getPosition() + shape->getPoint(1) + sf::Vector2f(passWidth, 0));
-		mSurroundingPoints.push_back(shape->getPosition() + shape->getPoint(2) + sf::Vector2f(passWidth, 0));
-		mSurroundingPoints.push_back(shape->getPosition() + shape->getPoint(0) - sf::Vector2f(passWidth, 0));
-		mSurroundingPoints.push_back(shape->getPosition() + shape->getPoint(3) - sf::Vector2f(passWidth, 0));
+		mSurroundingPoints.push_back(shape->getPosition() - shape->getOrigin() + shape->getPoint(1) + sf::Vector2f(passWidth, 0));
+		mSurroundingPoints.push_back(shape->getPosition() - shape->getOrigin() + shape->getPoint(2) + sf::Vector2f(passWidth, 0));
+		mSurroundingPoints.push_back(shape->getPosition() - shape->getOrigin() + shape->getPoint(0) - sf::Vector2f(passWidth, 0));
+		mSurroundingPoints.push_back(shape->getPosition() - shape->getOrigin() + shape->getPoint(3) - sf::Vector2f(passWidth, 0));
 		break;
 	default:
 		break;

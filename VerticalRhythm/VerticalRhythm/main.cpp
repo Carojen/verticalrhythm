@@ -1,5 +1,4 @@
 #include <SFML/Graphics.hpp>
-#include "tile.h"
 #include "ObjectManager.h"
 #include <iostream>
 #include <vector>
@@ -49,6 +48,7 @@ int main()
 	sf::Time time;
 	sf::Clock clock;
 	sf::Vector2f offset;
+	bool drawShapes = true;
 
 	bool isPaused = false;
 
@@ -60,27 +60,34 @@ int main()
 			if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 			{
 				window.close();
-			}
-			else if (event.type == sf::Event::KeyPressed && sf::Keyboard::isKeyPressed(sf::Keyboard::R))
-			{				
-				offset.x += 1000;
-				createLevel(offset);
-			}
-			else if (event.type == sf::Event::KeyPressed && sf::Keyboard::isKeyPressed(sf::Keyboard::P))
-			{
-				if (!isPaused)
-				{
-					std::cout << "paused game" << std::endl;
-				}
-				else
-				{
-					std::cout << "game unpaused" << std::endl;
-				}
-				isPaused = !isPaused;
-			}
+			}			
 			else if (event.type == sf::Event::KeyPressed)
 			{
-				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Add))
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
+				{
+					offset.x += 1000;
+					createLevel(offset);
+				}
+				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::X))
+				{					
+					ObjectManager::instance().ResetObjectManager();
+					offset.x = 0;					
+				}
+				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::P))
+				{
+					if (!isPaused)
+					{
+						std::cout << "paused game" << std::endl;
+						drawShapes = false;
+					}
+					else
+					{
+						std::cout << "game unpaused" << std::endl;
+						drawShapes = true;
+					}
+					isPaused = !isPaused;
+				}
+				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Add))
 				{
 					view.zoom(0.75f);					
 				}
@@ -126,7 +133,10 @@ int main()
 		}
 		for (auto shape : ObjectManager::instance().GetShapes())
 		{
-			window.draw(*shape);
+			if (drawShapes)
+			{
+				window.draw(*shape);
+			}			
 		}
 		
 		
