@@ -29,17 +29,27 @@ Level::Level(std::vector<rhythm> rhythms, std::vector<action> actions, sf::Vecto
 	
 	float horizMove = 0;
 	int nrOfHinders = 0;
+	float averageX = 0;
 	for (auto go : mGameObjects)
 	{
-		horizMove += std::abs(go->GetPosition().x - mPosition.x);
+		averageX += go->GetPosition().x;
 		if (go->GetType() == move_left_hinder || go->GetType() == move_right_hinder || go->GetType() == moving_block_single)
 		{
 			nrOfHinders++;
 		}
 	}
+	averageX /= mGameObjects.size();
+	for (auto go : mGameObjects)
+	{
+		horizMove += abs(averageX - go->GetPosition().x);
+	}
+	horizMove /= mGameObjects.size();
+
 	mLength = mActions.back().stoptime;
 	mForgivenessRatio = (float)(mGameObjects.size() - nrOfHinders) / (float) mGameObjects.size();
-	mLinearity = 1 - horizMove / (mGameObjects.at(1)->GetPosition().y - mGameObjects.back()->GetPosition().y);
+
+	
+	mLinearity = horizMove;
 
 	UpdateOutline();
 }

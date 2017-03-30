@@ -112,7 +112,7 @@ std::vector<action> LevelGenerator::createActions(std::vector<double> beats, flo
 	for (int i = 0; i < beats.size(); i++)
 	{		
 		double beat = beats[i];
-		currentTime += beat; // starttiden är efter det första beatet/vänteperioden. Se anteckning 20/3.
+		currentTime += beat; //starttiden är efter det första beatet/vänteperioden. Se anteckning 20/3.
 		action a = action();
 		a.word = (Verb)randomValue;
 		a.starttime = currentTime; 

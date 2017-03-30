@@ -49,8 +49,6 @@ struct rhythm
 	int length = 20; //{5,10,15,20}
 	Density density = Density::medium;
 	RhythmType type = RhythmType::regular;
-	bool isReflectable = false;
-	bool isRepeatable = false;
 };
 
 struct action
