@@ -17,12 +17,12 @@ void ObjectManager::ResetObjectManager()
 {
 	while (mGameObjects.size() > 0)
 	{
-		delete mGameObjects[mGameObjects.size() - 1];
+		delete mGameObjects.back();
 		mGameObjects.pop_back();
 	}
 	while (mShapes.size() > 0)
 	{
-		delete mShapes[mShapes.size() - 1];
+		delete mShapes.back();
 		mShapes.pop_back();
 	}
 }

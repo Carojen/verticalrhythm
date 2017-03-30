@@ -37,7 +37,8 @@ enum keyword
 	move_left_ledge,
 	move_right_ledge,
 	moving_block_single,
-	platform,
+	platform_left,
+	platform_right,
 	move_left_hinder,
 	move_right_hinder,
 	other
@@ -93,6 +94,7 @@ public:
 			break;
 		case medium:
 			outString = "medium";
+			break;
 		case high:
 			outString = "high";
 			break;
@@ -113,6 +115,7 @@ public:
 			break;
 		case swing:
 			outString = "swing";
+			break;
 		case random:
 			outString = "random";
 			break;
@@ -133,6 +136,7 @@ public:
 			break;
 		case brake:
 			outString = "brake";
+			break;
 		case wait:
 			outString = "wait";
 			break;
@@ -157,8 +161,9 @@ public:
 		case moving_block_single:
 			outString = "moving_block_single";
 			break;
-		case platform:
-			outString = "platform";
+		case platform_left:
+		case platform_right:
+			outString = "resting_platform";
 			break;
 		case move_left_hinder:
 			outString = "move_left_hinder";

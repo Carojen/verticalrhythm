@@ -26,7 +26,6 @@ public:
 	std::vector<geometry> createGeometry(rhythm r);
 	std::vector<GameObject*> GetLevelObjects(std::vector<action> actions, sf::Vector2f offset);
 	std::vector<GameObject*> GetLevelObjects(std::vector<geometry> geometryElements, sf::Vector2f offset);
-	std::vector<sf::Shape*> GetShapes(std::vector<geometry> geometryElements, sf::Vector2f offset = sf::Vector2f());
 	player avatar;
 };
 

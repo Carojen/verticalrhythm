@@ -170,20 +170,35 @@ void GameObject::SetShape(keyword aType, sf::Vector2f size, float scale)
 		mSurroundingPoints.push_back(shape->getPosition() - shape->getOrigin() + shape->getPoint(0) - sf::Vector2f(passWidth, 0));
 		mSurroundingPoints.push_back(shape->getPosition() - shape->getOrigin() + shape->getPoint(2) - sf::Vector2f(passWidth, 0));
 		break;
-	case platform:
-		shape->setOutlineThickness(2);
-		shape->setOutlineColor(sf::Color::Magenta);
-		shape->setFillColor(sf::Color(0, 128, 0));
+	case platform_left:
+		shape->setOutlineThickness(0);
+		shape->setOutlineColor(sf::Color::Green);
+		shape->setFillColor(sf::Color::Yellow);
 		shape->setPointCount(4);
-		shape->setPoint(0, sf::Vector2f(-scale, 0));
-		shape->setPoint(1, sf::Vector2f(scale, 0));
-		shape->setPoint(2, sf::Vector2f(scale, platformThickness));
-		shape->setPoint(3, sf::Vector2f(-scale, platformThickness));
-		shape->setOrigin(0, -scale * 2);
+		shape->setPoint(0, sf::Vector2f(0, 0));
+		shape->setPoint(1, sf::Vector2f(size.x, size.y));
+		shape->setPoint(2, sf::Vector2f(size.x - platformThickness, size.y + platformThickness));
+		shape->setPoint(3, sf::Vector2f(-platformThickness, platformThickness));
+		shape->setOrigin(scale, -scale * 2);
+		mSurroundingPoints.push_back(shape->getPosition() - shape->getOrigin() + shape->getPoint(1) + sf::Vector2f(passWidth, -(size.y < scale ? size.y / 2 : passWidth)));
 		mSurroundingPoints.push_back(shape->getPosition() - shape->getOrigin() + shape->getPoint(1) + sf::Vector2f(passWidth, 0));
-		mSurroundingPoints.push_back(shape->getPosition() - shape->getOrigin() + shape->getPoint(2) + sf::Vector2f(passWidth, 0));
-		mSurroundingPoints.push_back(shape->getPosition() - shape->getOrigin() + shape->getPoint(0) - sf::Vector2f(passWidth, 0));
-		mSurroundingPoints.push_back(shape->getPosition() - shape->getOrigin() + shape->getPoint(3) - sf::Vector2f(passWidth, 0));
+		mSurroundingPoints.push_back(shape->getPosition() - shape->getOrigin() + shape->getPoint(0) - sf::Vector2f(platformThickness * 2, 0));
+		mSurroundingPoints.push_back(shape->getPosition() - shape->getOrigin() + shape->getPoint(1) - sf::Vector2f(platformThickness * 2, 0));
+		break;
+	case platform_right:
+		shape->setOutlineThickness(0);
+		shape->setOutlineColor(sf::Color::Green);
+		shape->setFillColor(sf::Color::Yellow);
+		shape->setPointCount(4);
+		shape->setPoint(0, sf::Vector2f(0, 0));
+		shape->setPoint(1, sf::Vector2f(-size.x, size.y));
+		shape->setPoint(2, sf::Vector2f(-size.x + platformThickness, size.y + platformThickness));
+		shape->setPoint(3, sf::Vector2f(platformThickness, platformThickness));
+		shape->setOrigin(-scale, -scale * 2);
+		mSurroundingPoints.push_back(shape->getPosition() - shape->getOrigin() + shape->getPoint(0) + sf::Vector2f(platformThickness * 2, 0));
+		mSurroundingPoints.push_back(shape->getPosition() - shape->getOrigin() + shape->getPoint(1) + sf::Vector2f(platformThickness * 2, 0));
+		mSurroundingPoints.push_back(shape->getPosition() - shape->getOrigin() + shape->getPoint(1) - sf::Vector2f(passWidth, size.y < scale ? size.y / 2 : passWidth));
+		mSurroundingPoints.push_back(shape->getPosition() - shape->getOrigin() + shape->getPoint(1) - sf::Vector2f(passWidth, 0));
 		break;
 	default:
 		break;

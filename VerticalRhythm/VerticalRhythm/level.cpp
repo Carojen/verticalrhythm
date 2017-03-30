@@ -27,7 +27,7 @@ Level::Level(std::vector<rhythm> rhythms, std::vector<action> actions, sf::Vecto
 	}
 	mGameObjects = LevelGenerator::instance().GetLevelObjects(mActions, position);
 	
-	float horizMove = 0;
+	float horizontalMovement = 0;
 	int nrOfHinders = 0;
 	float averageX = 0;
 	for (auto go : mGameObjects)
@@ -41,15 +41,12 @@ Level::Level(std::vector<rhythm> rhythms, std::vector<action> actions, sf::Vecto
 	averageX /= mGameObjects.size();
 	for (auto go : mGameObjects)
 	{
-		horizMove += abs(averageX - go->GetPosition().x);
+		horizontalMovement += abs(averageX - go->GetPosition().x);
 	}
-	horizMove /= mGameObjects.size();
 
 	mLength = mActions.back().stoptime;
-	mForgivenessRatio = (float)(mGameObjects.size() - nrOfHinders) / (float) mGameObjects.size();
-
-	
-	mLinearity = horizMove;
+	mLeniency = (float)(mGameObjects.size() - nrOfHinders) / (float) mGameObjects.size();	
+	mLinearity = horizontalMovement/mGameObjects.size();
 
 	UpdateOutline();
 }
@@ -61,13 +58,17 @@ float Level::GetLinearity()
 {
 	return mLinearity;
 }
-float Level::GetForgivenessRatio()
+float Level::GetLeniency()
 {
-	return mForgivenessRatio;
+	return mLeniency;
 }
 float Level::GetLength()
 {	
 	return mActions.back().stoptime;
+}
+rhythm Level::GetRhythm()
+{
+	return mRhythms.at(0);
 }
 std::vector<sf::Shape*>& Level::GetOutline()
 {
@@ -82,8 +83,7 @@ std::vector<sf::Shape*>& Level::UpdateOutline()
 	int scale = LevelGenerator::instance().avatar.scale.y;
 	int passWidth = 4 * scale;
 	float min_point = mPosition.x;
-	float max_point = mPosition.x;
-	std::cout << min_point;
+	float max_point = mPosition.x;	
 
 	for (auto go : mGameObjects)
 	{
@@ -138,7 +138,7 @@ std::vector<sf::Shape*>& Level::UpdateOutline()
 		boundariesLeft->setPoint(3, sf::Vector2f(min_point - passWidth * 3, leftSide[i - 1].y));
 		mOutline.push_back(boundariesLeft);
 	}
-	std::cout << " min: " << min_point << " max:" << max_point << std::endl;
+	
 	return mOutline;
 }
 Level::~Level()
