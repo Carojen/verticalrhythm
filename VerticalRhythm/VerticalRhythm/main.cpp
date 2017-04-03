@@ -6,6 +6,7 @@
 #include "gameobject.h"
 #include "level.h"
 
+/* Det här programmet är skapat av Jenny Söderberg som en del av ett examensarbete på kandidatnivå med inriktning mot dataspelsutveckling vid Högskolan i Skövde vårterminen 2017*/
 
 Level* createLevel(sf::Vector2f offset = sf::Vector2f())
 {
@@ -24,14 +25,11 @@ Level* createLevel(sf::Vector2f offset = sf::Vector2f())
 
 	/* Skapandet av banan baserat på ovanstående lista av rytmer samt utskrift av banans egenskaper */
 	Level* level = new Level(rhythms, std::vector<action>(), offset);
-	ObjectManager::instance().addGameObjects(level->GetGameObjects());
-	ObjectManager::instance().addShapes(level->GetOutline());
+	
 	for (auto go : level->GetGameObjects())
 	{
 		std::cout << go->toString() << std::endl;
 	}
-	
-	std::cout << "Linearity: " << level->GetLinearity() << " Leniency: " << level->GetLeniency() << " Length: " << level->GetLength() << std::endl;
 	return level;
 }
 
@@ -144,10 +142,7 @@ std::vector<Level*> createTestLevels(int levelID)
 
 		for (auto level : result)
 		{
-			std::cout << "Linearity: " << level->GetLinearity() << " Leniency: " << level->GetLeniency() << " Length: " << level->GetLength() << std::endl;
-			
-			ObjectManager::instance().addGameObjects(level->GetGameObjects());
-			ObjectManager::instance().addShapes(level->GetOutline());
+			std::cout << "Linearity: " << level->GetLinearity() << " Leniency: " << level->GetLeniency() << " Length: " << level->GetLength() << std::endl;			
 		}
 	}
 	
@@ -164,18 +159,13 @@ int main()
 	view.zoom(2.0f);
 	window.setView(view);
 
-	std::vector<Level*> levels;
-			
-	sf::Time time;
-	sf::Clock clock;
+	std::vector<Level*> levels;			
 	sf::Vector2f offset;
-	bool drawShapes = false;
-	bool drawObjects =false;
 	bool drawLevel = true;
 	int currentlevelIndex = 0;
 
-	bool isPaused = false;
-
+	std::cout << "Det här programmet är skapat av Jenny Söderberg som en del av ett examensarbete på kandidatnivå med inriktning mot dataspelsutveckling vid Högskolan i Skövde vårterminen 2017" << std::endl << std::endl;
+	std::cout << "Tryck 'T' för att starta och därefter 'N' och 'M' för att byta bana." << std::endl;
 	while (window.isOpen())
 	{
 		sf::Event event;
@@ -187,12 +177,7 @@ int main()
 			}			
 			else if (event.type == sf::Event::KeyPressed)
 			{
-				if (sf::Keyboard::isKeyPressed(sf::Keyboard::L))
-				{
-					levels.push_back(createLevel(offset));
-					offset.x += 1000;
-				}
-				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::N))
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::N))
 				{
 					currentlevelIndex++;
 					if (currentlevelIndex >= levels.size())
@@ -211,13 +196,13 @@ int main()
 						currentlevelIndex = levels.size() - 1;
 					}
 					rhythm r = levels.at(currentlevelIndex)->GetRhythm();
-					std::cout << "Rhythm " << currentlevelIndex << ": " << MyEnums::ToString(r.density) << ", " << MyEnums::ToString(r.type) << ", " << r.length << std::endl;
+					std::cout << "Level " << currentlevelIndex << ": " << MyEnums::ToString(r.density) << ", " << MyEnums::ToString(r.type) << ", " << r.length << std::endl;
 					std::cout << "Linearity: " << levels.at(currentlevelIndex)->GetLinearity() << " Leniency: " << levels.at(currentlevelIndex)->GetLeniency() << " Length: " << levels.at(currentlevelIndex)->GetLength() << std::endl;
 				}
 				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::T))
 				{
 					std::cout << "Starting creation of 24 * 100 levels" << std::endl;
-					int creationTime = time.asSeconds();
+					
 					for (int i = 0; i < 24; i++)
 					{
 						for (auto l : createTestLevels(i))
@@ -225,8 +210,15 @@ int main()
 							levels.push_back(l);
 						}						
 					}
-					creationTime = time.asSeconds() - creationTime;
 					std::cout << "Finished." << std::endl;
+				}
+				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::C))
+				{
+					levels.push_back(createLevel());
+					currentlevelIndex = levels.size() - 1;
+					rhythm r = levels.at(currentlevelIndex)->GetRhythm();
+					std::cout << "Level " << currentlevelIndex << ": " << MyEnums::ToString(r.density) << ", " << MyEnums::ToString(r.type) << ", " << r.length << std::endl;
+					std::cout << "Linearity: " << levels.at(currentlevelIndex)->GetLinearity() << " Leniency: " << levels.at(currentlevelIndex)->GetLeniency() << " Length: " << levels.at(currentlevelIndex)->GetLength() << std::endl;
 				}
 				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Add))
 				{
@@ -255,34 +247,11 @@ int main()
 				window.setView(view);
 			}
 		}
-		for (auto go : ObjectManager::instance().GetGameObjects())
-		{
-			go->update(time);
-		}
-
-		time = clock.restart();
-
-		if (!isPaused)
-		{
-		}
+		
 		
 		window.clear();
-		
-		if (drawObjects)
-		{
-			for (auto go : ObjectManager::instance().GetGameObjects())
-			{
-				window.draw(*(go->GetShape()));
-			}
-		}		
-		if (drawShapes)
-		{
-			for (auto shape : ObjectManager::instance().GetShapes())
-			{
-				window.draw(*shape);
-			}
-		}
-		if (drawLevel && levels.size() > 0)
+				
+		if (drawLevel && !levels.empty())
 		{
 			for (auto go : levels.at(currentlevelIndex)->GetGameObjects())
 			{
@@ -292,9 +261,7 @@ int main()
 			{
 				window.draw(*shape);
 			}
-		}
-
-		
+		}		
 		window.display();
 	}	
 

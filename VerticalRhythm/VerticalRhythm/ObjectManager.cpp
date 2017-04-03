@@ -15,12 +15,12 @@ ObjectManager::~ObjectManager()
 
 void ObjectManager::ResetObjectManager()
 {
-	while (mGameObjects.size() > 0)
+	while (!mGameObjects.empty())
 	{
-		delete mGameObjects.back();
-		mGameObjects.pop_back();
+		delete mGameObjects.back();		
+		mGameObjects.pop_back();				
 	}
-	while (mShapes.size() > 0)
+	while (!mShapes.empty())
 	{
 		delete mShapes.back();
 		mShapes.pop_back();
