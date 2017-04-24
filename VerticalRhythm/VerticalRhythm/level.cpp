@@ -26,27 +26,48 @@ Level::Level(std::vector<rhythm> rhythms, std::vector<action> actions, sf::Vecto
 		}
 	}
 	mGameObjects = LevelGenerator::instance().GetLevelObjects(mActions, position);
-	
+		
 	float horizontalMovement = 0;
-	int nrOfHinders = 0;
 	float averageX = 0;
+	float varianceX = 0;
+	float averageDiff = 0;
+	float prevX = 0;
+	if (!mGameObjects.empty())
+	{
+		prevX = mGameObjects.at(0)->GetPosition().x;
+	}
+	int nrOfHinders = 0;	
+
 	for (auto go : mGameObjects)
 	{
+		averageDiff += abs(go->GetPosition().x - prevX);
+		prevX = go->GetPosition().x;
+
 		averageX += go->GetPosition().x;
+
 		if (go->GetType() == move_left_hinder || go->GetType() == move_right_hinder || go->GetType() == moving_block_single)
 		{
 			nrOfHinders++;
 		}
 	}
 	averageX /= mGameObjects.size();
+	averageDiff /= mGameObjects.size();
 	for (auto go : mGameObjects)
 	{
-		horizontalMovement += abs(averageX - go->GetPosition().x);
+		varianceX = pow(go->GetPosition().x - averageX, 2);
+		horizontalMovement += abs(go->GetPosition().x - averageX);
 	}
+	varianceX /= mGameObjects.size();
+	horizontalMovement /= mGameObjects.size();
+
+	std::cout << "Var, hM: " << sqrt(varianceX) << ", " << horizontalMovement << std::endl;
 
 	mLength = mActions.back().stoptime;
 	mLeniency = (float)(mGameObjects.size() - nrOfHinders) / (float) mGameObjects.size();	
-	mLinearity = horizontalMovement/mGameObjects.size();
+	
+	//mLinearity = horizontalMovement;
+	mLinearity = sqrt(varianceX);
+	//mLinearity = averageDiff;
 
 	UpdateOutline();
 }

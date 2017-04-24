@@ -92,11 +92,30 @@ std::vector<Level*> createTestLevels(int levelID)
 	Level* leniencyMax = levels.back();
 	float leniencyAverage = 0;
 	float linearityAverage = 0;
+	float leniencyVariance = 0;
+	float linearityVariance = 0;
 
+	//Calculate averages for leniency and linearity
 	for (auto l : levels)
 	{
 		leniencyAverage += l->GetLeniency();
 		linearityAverage += l->GetLinearity();
+	}
+	leniencyAverage /= levels.size();
+	linearityAverage /= levels.size();
+	
+
+	//Calculate variance for levels
+	for (auto l : levels)
+	{
+		leniencyVariance += pow(l->GetLeniency() - leniencyAverage, 2);
+		linearityVariance += pow(l->GetLinearity() - linearityAverage, 2);
+	}
+	leniencyVariance /= levels.size();
+	linearityVariance /= levels.size();
+
+	for (auto l : levels)
+	{		
 		if (l->GetLeniency() >= leniencyMax->GetLeniency())
 		{
 			leniencyMax = l;
@@ -114,8 +133,7 @@ std::vector<Level*> createTestLevels(int levelID)
 			linearityMin = l;
 		}
 	}
-	linearityAverage /= 100;
-	leniencyAverage /= 100;
+	
 
 	std::vector<Level*> result;
 	sf::Vector2f offset;
@@ -138,7 +156,8 @@ std::vector<Level*> createTestLevels(int levelID)
 	}
 	else
 	{
-		std::cout << "Linearity: " << linearityMin->GetLinearity() << " - " << linearityMax->GetLinearity() << " (Avg: " << linearityAverage << "). Leniency: " << leniencyMin->GetLeniency() << " - " << leniencyMax->GetLeniency() << " (Avg: " << leniencyAverage << ")" << std::endl;
+		std::cout << "Linearity: " << linearityMin->GetLinearity() << " - " << linearityMax->GetLinearity() << " (Avg: " << linearityAverage << ", Dev: " << sqrt(linearityVariance) << ")." << std::endl;
+		std::cout << "Leniency: " << leniencyMin->GetLeniency() << " - " << leniencyMax->GetLeniency() << " (Avg : " << leniencyAverage << ", Dev: " << sqrt(leniencyVariance) << ")" << std::endl;
 
 		for (auto level : result)
 		{
