@@ -25,12 +25,14 @@ public:
 	rhythm GetRhythm();
 	std::vector<sf::Shape*>& GetOutline();
 	std::vector<sf::Shape*>& UpdateOutline();
+
+	float mLinearity[3] = {};
 private:
 	sf::Vector2f mPosition;
 	std::vector<rhythm> mRhythms;
 	std::vector<action> mActions;
 	std::vector<GameObject*> mGameObjects;
-	float mLinearity;
+	
 	float mLeniency;
 	float mLength;
 	std::vector<sf::Shape*> mOutline;

@@ -157,6 +157,8 @@ std::vector<Level*> createTestLevels(int levelID)
 	else
 	{
 		std::cout << "Linearity: " << linearityMin->GetLinearity() << " - " << linearityMax->GetLinearity() << " (Avg: " << linearityAverage << ", Dev: " << sqrt(linearityVariance) << ")." << std::endl;
+		std::cout << "hM, var, diff: " << linearityMin->mLinearity[0] << ", " << linearityMin->mLinearity[1] << ", " << linearityMin->mLinearity[2] << std::endl;
+		std::cout << "hM, var, diff: " << linearityMax->mLinearity[0] << ", " << linearityMax->mLinearity[1] << ", " << linearityMax->mLinearity[2] << std::endl;
 		std::cout << "Leniency: " << leniencyMin->GetLeniency() << " - " << leniencyMax->GetLeniency() << " (Avg : " << leniencyAverage << ", Dev: " << sqrt(leniencyVariance) << ")" << std::endl;
 
 		for (auto level : result)
@@ -204,8 +206,9 @@ int main()
 						currentlevelIndex = 0;
 					}
 					rhythm r = levels.at(currentlevelIndex)->GetRhythm();
-					std::cout << "Rhythm " << currentlevelIndex << ": " << MyEnums::ToString(r.density) << ", " << MyEnums::ToString(r.type) << ", " << r.length << std::endl;
+					std::cout << "Level " << currentlevelIndex << ": " << MyEnums::ToString(r.density) << ", " << MyEnums::ToString(r.type) << ", " << r.length << std::endl;
 					std::cout << "Linearity: " << levels.at(currentlevelIndex)->GetLinearity() << " Leniency: " << levels.at(currentlevelIndex)->GetLeniency() << " Length: " << levels.at(currentlevelIndex)->GetLength() << std::endl;
+					std::cout << levels.at(currentlevelIndex)->mLinearity[0] << ", " << levels.at(currentlevelIndex)->mLinearity[1] << ", " << levels.at(currentlevelIndex)->mLinearity[2] << std::endl;
 				}
 				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::M))
 				{
@@ -217,6 +220,7 @@ int main()
 					rhythm r = levels.at(currentlevelIndex)->GetRhythm();
 					std::cout << "Level " << currentlevelIndex << ": " << MyEnums::ToString(r.density) << ", " << MyEnums::ToString(r.type) << ", " << r.length << std::endl;
 					std::cout << "Linearity: " << levels.at(currentlevelIndex)->GetLinearity() << " Leniency: " << levels.at(currentlevelIndex)->GetLeniency() << " Length: " << levels.at(currentlevelIndex)->GetLength() << std::endl;
+					std::cout << levels.at(currentlevelIndex)->mLinearity[0] << ", "  << levels.at(currentlevelIndex)->mLinearity[1] << ", " << levels.at(currentlevelIndex)->mLinearity[2] << std::endl;
 				}
 				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::T))
 				{

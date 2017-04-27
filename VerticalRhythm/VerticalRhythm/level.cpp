@@ -60,14 +60,14 @@ Level::Level(std::vector<rhythm> rhythms, std::vector<action> actions, sf::Vecto
 	varianceX /= mGameObjects.size();
 	horizontalMovement /= mGameObjects.size();
 
-	std::cout << "Var, hM: " << sqrt(varianceX) << ", " << horizontalMovement << std::endl;
+	//std::cout << "Var, hM, diff: " << sqrt(varianceX) << ", " << horizontalMovement << ", " << averageDiff << std::endl;
 
 	mLength = mActions.back().stoptime;
 	mLeniency = (float)(mGameObjects.size() - nrOfHinders) / (float) mGameObjects.size();	
 	
-	//mLinearity = horizontalMovement;
-	mLinearity = sqrt(varianceX);
-	//mLinearity = averageDiff;
+	mLinearity[0] = horizontalMovement;
+	mLinearity[1] = sqrt(varianceX);
+	mLinearity[2] = averageDiff;
 
 	UpdateOutline();
 }
@@ -77,7 +77,7 @@ std::vector<GameObject*>& Level::GetGameObjects()
 }
 float Level::GetLinearity()
 {
-	return mLinearity;
+	return mLinearity[0];
 }
 float Level::GetLeniency()
 {
