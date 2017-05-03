@@ -2,6 +2,8 @@
 #include <iostream>
 #include "levelgenerator.h"
 #include <cmath>
+#include "gameobject.h"
+#include <SFML\Graphics\Shape.hpp>
 
 ObjectManager::ObjectManager()
 {

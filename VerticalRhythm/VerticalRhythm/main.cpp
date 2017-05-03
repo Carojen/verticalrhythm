@@ -1,13 +1,16 @@
 #include <SFML/Graphics.hpp>
 #include "ObjectManager.h"
 #include <iostream>
+#include <sstream>
 #include <vector>
 #include "levelgenerator.h"
 #include "gameobject.h"
 #include "level.h"
+#include <string>
 
 /* Det här programmet är skapat av Jenny Söderberg som en del av ett examensarbete på kandidatnivå med inriktning mot dataspelsutveckling vid Högskolan i Skövde vårterminen 2017*/
 
+std::string rhythmOutput[24] = {};
 Level* createLevel(sf::Vector2f offset = sf::Vector2f())
 {
 	rhythm r;
@@ -28,7 +31,7 @@ Level* createLevel(sf::Vector2f offset = sf::Vector2f())
 	
 	for (auto go : level->GetGameObjects())
 	{
-		std::cout << go->toString() << std::endl;
+		std::cout << go.toString() << std::endl;
 	}
 	return level;
 }
@@ -47,9 +50,10 @@ Level* createLevel(rhythm r, sf::Vector2f offset = sf::Vector2f())
 	return new Level(rhythms, std::vector<action>(), offset);
 }
 
-std::vector<Level*> createTestLevels(int levelID)
+std::vector<Level> createTestLevels(int levelID)
 {
 	std::vector<Level*> levels;
+	levels.reserve(10000);
 	rhythm r;
 	r.type =  levelID < 12 ? regular : swing;
 	
@@ -82,7 +86,7 @@ std::vector<Level*> createTestLevels(int levelID)
 	r.density = (Density) (levelID % 3);
 	
 	
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < 10000; i++)
 	{
 		levels.push_back(createLevel(r));
 	}
@@ -135,38 +139,62 @@ std::vector<Level*> createTestLevels(int levelID)
 	}
 	
 
-	std::vector<Level*> result;
+	std::vector<Level> result;
 	sf::Vector2f offset;
 		
-	result.push_back(linearityMin);
-	result.push_back(leniencyMin);
+	result.push_back(*linearityMin);
+	result.push_back(*leniencyMin);
 	if (linearityMin != linearityMax)
 	{
-		result.push_back(linearityMax);
+		result.push_back(*linearityMax);
 	}	
 	if (linearityMax != leniencyMin)
 	{
-		result.push_back(leniencyMax);
+		result.push_back(*leniencyMax);
 	}
 
-	std::cout << "Rhythm " << levelID << ": " << MyEnums::ToString(r.density) << ", " << MyEnums::ToString(r.type) << ", " << r.length << std::endl;
+	
+
+	//std::cout << "Rhythm " << levelID << ": " << MyEnums::ToString(r.density) << ", " << MyEnums::ToString(r.type) << ", " << r.length << std::endl;
+	std::stringstream tempString;
+	tempString << "\n Rhytm " << levelID << ": " << MyEnums::ToString(r.density) << ", " + MyEnums::ToString(r.type) << ", " << r.length << "\n";
+	//std::cout << rhythmOutput[levelID] << std::endl;
+	std::cout << levelID << std::endl;
+
 	if (result.size() < 2)
 	{
-		std::cout << "Discarded due to low variety of generated levels." << std::endl;
+		//std::cout << levelID << "Discarded due to low variety of generated levels." << std::endl;
 	}
 	else
-	{
-		std::cout << "Linearity: " << linearityMin->GetLinearity() << " - " << linearityMax->GetLinearity() << " (Avg: " << linearityAverage << ", Dev: " << sqrt(linearityVariance) << ")." << std::endl;
-		std::cout << "hM, var, diff: " << linearityMin->mLinearity[0] << ", " << linearityMin->mLinearity[1] << ", " << linearityMin->mLinearity[2] << std::endl;
-		std::cout << "hM, var, diff: " << linearityMax->mLinearity[0] << ", " << linearityMax->mLinearity[1] << ", " << linearityMax->mLinearity[2] << std::endl;
-		std::cout << "Leniency: " << leniencyMin->GetLeniency() << " - " << leniencyMax->GetLeniency() << " (Avg : " << leniencyAverage << ", Dev: " << sqrt(leniencyVariance) << ")" << std::endl;
+	{	
+		
+		tempString << "Linearity:  | " << linearityMin->GetLinearity()	<< " | " << linearityMax->GetLinearity() << " | " << linearityAverage << " | " << sqrt(linearityVariance) << "\n"
+			<< "Leniency: | " << leniencyMin->GetLeniency() << " | " << leniencyMax->GetLeniency() << " | " << leniencyAverage		<< " | " << sqrt(leniencyVariance);
+
+		
+		//std::cout << "Linearity: " << linearityMin->GetLinearity() << " - " << linearityMax->GetLinearity() << " (Avg: " << linearityAverage << ", Dev: " << sqrt(linearityVariance) << ")." << std::endl;
+		//std::cout << "Leniency: " << leniencyMin->GetLeniency() << " - " << leniencyMax->GetLeniency() << " (Avg : " << leniencyAverage << ", Dev: " << sqrt(leniencyVariance) << ")" << std::endl;
 
 		for (auto level : result)
 		{
-			std::cout << "Linearity: " << level->GetLinearity() << " Leniency: " << level->GetLeniency() << " Length: " << level->GetLength() << std::endl;			
+			tempString << "\n | | | | |" << level.GetLinearity() << " | " << level.GetLeniency() << " | " << level.GetLength();
+			//std::cout << "Linearity: " << level->GetLinearity() << " Leniency: " << level->GetLeniency() << " Length: " << level->GetLength() << std::endl;			
 		}
+		rhythmOutput[levelID] += tempString.str();
+	}	
+
+	while (!levels.empty())
+	{
+		if (!(levels.back() == linearityMin || levels.back() == linearityMax || levels.back() == leniencyMin || levels.back() == leniencyMax))
+		{
+			for (auto go : levels.back()->GetGameObjects())
+			{
+				delete go.GetShape();
+			}
+		}
+		delete levels.back();
+		levels.pop_back();
 	}
-	
 	return result;
 }
 
@@ -180,7 +208,7 @@ int main()
 	view.zoom(2.0f);
 	window.setView(view);
 
-	std::vector<Level*> levels;			
+	std::vector<Level> levels;			
 	sf::Vector2f offset;
 	bool drawLevel = true;
 	int currentlevelIndex = 0;
@@ -205,10 +233,9 @@ int main()
 					{
 						currentlevelIndex = 0;
 					}
-					rhythm r = levels.at(currentlevelIndex)->GetRhythm();
+					rhythm r = levels.at(currentlevelIndex).GetRhythm();
 					std::cout << "Level " << currentlevelIndex << ": " << MyEnums::ToString(r.density) << ", " << MyEnums::ToString(r.type) << ", " << r.length << std::endl;
-					std::cout << "Linearity: " << levels.at(currentlevelIndex)->GetLinearity() << " Leniency: " << levels.at(currentlevelIndex)->GetLeniency() << " Length: " << levels.at(currentlevelIndex)->GetLength() << std::endl;
-					std::cout << levels.at(currentlevelIndex)->mLinearity[0] << ", " << levels.at(currentlevelIndex)->mLinearity[1] << ", " << levels.at(currentlevelIndex)->mLinearity[2] << std::endl;
+					std::cout << "Linearity: " << levels.at(currentlevelIndex).GetLinearity() << " Leniency: " << levels.at(currentlevelIndex).GetLeniency() << " Length: " << levels.at(currentlevelIndex).GetLength() << std::endl;
 				}
 				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::M))
 				{
@@ -217,14 +244,13 @@ int main()
 					{
 						currentlevelIndex = levels.size() - 1;
 					}
-					rhythm r = levels.at(currentlevelIndex)->GetRhythm();
+					rhythm r = levels.at(currentlevelIndex).GetRhythm();
 					std::cout << "Level " << currentlevelIndex << ": " << MyEnums::ToString(r.density) << ", " << MyEnums::ToString(r.type) << ", " << r.length << std::endl;
-					std::cout << "Linearity: " << levels.at(currentlevelIndex)->GetLinearity() << " Leniency: " << levels.at(currentlevelIndex)->GetLeniency() << " Length: " << levels.at(currentlevelIndex)->GetLength() << std::endl;
-					std::cout << levels.at(currentlevelIndex)->mLinearity[0] << ", "  << levels.at(currentlevelIndex)->mLinearity[1] << ", " << levels.at(currentlevelIndex)->mLinearity[2] << std::endl;
+					std::cout << "Linearity: " << levels.at(currentlevelIndex).GetLinearity() << " Leniency: " << levels.at(currentlevelIndex).GetLeniency() << " Length: " << levels.at(currentlevelIndex).GetLength() << std::endl;
 				}
 				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::T))
 				{
-					std::cout << "Starting creation of 24 * 100 levels" << std::endl;
+					std::cout << "Starting creation of 24 * 10000 levels" << std::endl;
 					
 					for (int i = 0; i < 24; i++)
 					{
@@ -234,14 +260,27 @@ int main()
 						}						
 					}
 					std::cout << "Finished." << std::endl;
+					system("CLS");
+					std::cout << "| min | max | avg | dev | linearity | leniency | length \n";
+					for (auto s : rhythmOutput)
+					{
+						std::cout << s;
+					}
 				}
 				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::C))
 				{
-					levels.push_back(createLevel());
+					levels.push_back(*createLevel());
 					currentlevelIndex = levels.size() - 1;
-					rhythm r = levels.at(currentlevelIndex)->GetRhythm();
+					rhythm r = levels.at(currentlevelIndex).GetRhythm();
 					std::cout << "Level " << currentlevelIndex << ": " << MyEnums::ToString(r.density) << ", " << MyEnums::ToString(r.type) << ", " << r.length << std::endl;
-					std::cout << "Linearity: " << levels.at(currentlevelIndex)->GetLinearity() << " Leniency: " << levels.at(currentlevelIndex)->GetLeniency() << " Length: " << levels.at(currentlevelIndex)->GetLength() << std::endl;
+					std::cout << "Linearity: " << levels.at(currentlevelIndex).GetLinearity() << " Leniency: " << levels.at(currentlevelIndex).GetLeniency() << " Length: " << levels.at(currentlevelIndex).GetLength() << std::endl;
+				}
+				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::O))
+				{
+					for (auto s : rhythmOutput)
+					{
+						std::cout << s;
+					}
 				}
 				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Add))
 				{
@@ -276,13 +315,13 @@ int main()
 				
 		if (drawLevel && !levels.empty())
 		{
-			for (auto go : levels.at(currentlevelIndex)->GetGameObjects())
+			for (auto go : levels.at(currentlevelIndex).GetGameObjects())
 			{
-				window.draw(*(go->GetShape()));
+				window.draw(*(go.GetShape()));
 			}
-			for (auto shape : levels.at(currentlevelIndex)->GetOutline())
+			for (sf::ConvexShape shape : levels.at(currentlevelIndex).GetOutline())
 			{
-				window.draw(*shape);
+				window.draw(shape);
 			}
 		}		
 		window.display();

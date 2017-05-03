@@ -2,6 +2,7 @@
 #define LEVEL_H
 #include <vector>
 #include "levelModel.h"
+#include "SFML\Graphics\ConvexShape.hpp"
 
 
 class GameObject;
@@ -18,24 +19,24 @@ public:
 	Level();
 	~Level();
 	Level(std::vector<rhythm> rhythms, std::vector<action> actions = std::vector<action>(), sf::Vector2f position = sf::Vector2f());
-	std::vector<GameObject*>& GetGameObjects();
+	std::vector<GameObject>& GetGameObjects();
 	float GetLinearity();
 	float GetLeniency();
 	float GetLength();
 	rhythm GetRhythm();
-	std::vector<sf::Shape*>& GetOutline();
-	std::vector<sf::Shape*>& UpdateOutline();
+	std::vector<sf::ConvexShape>& GetOutline();
+	std::vector<sf::ConvexShape>& UpdateOutline();
 
 	float mLinearity[3] = {};
 private:
 	sf::Vector2f mPosition;
 	std::vector<rhythm> mRhythms;
 	std::vector<action> mActions;
-	std::vector<GameObject*> mGameObjects;
+	std::vector<GameObject> mGameObjects;
 	
 	float mLeniency;
 	float mLength;
-	std::vector<sf::Shape*> mOutline;
+	std::vector<sf::ConvexShape> mOutline;
 };
 
 #endif

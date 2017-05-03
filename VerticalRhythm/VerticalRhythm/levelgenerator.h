@@ -24,8 +24,8 @@ public:
 	std::vector<action> createActions(rhythm r, float offset = 0);
 	std::vector<geometry> GetGeometry(std::vector<action> actions);
 	std::vector<geometry> createGeometry(rhythm r);
-	std::vector<GameObject*> GetLevelObjects(std::vector<action> actions, sf::Vector2f offset);
-	std::vector<GameObject*> GetLevelObjects(std::vector<geometry> geometryElements, sf::Vector2f offset);
+	std::vector<GameObject> GetLevelObjects(std::vector<action> actions, sf::Vector2f offset);
+	std::vector<GameObject> GetLevelObjects(std::vector<geometry> geometryElements, sf::Vector2f offset);
 	player avatar;
 };
 

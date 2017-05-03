@@ -13,7 +13,7 @@ GameObject::GameObject(keyword aType, sf::Vector2f position, sf::Vector2f size, 
 }
 
 GameObject::~GameObject()
-{
+{	
 }
 
 void GameObject::update(sf::Time& time)

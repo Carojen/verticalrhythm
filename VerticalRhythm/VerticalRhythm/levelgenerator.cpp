@@ -229,18 +229,18 @@ std::vector<geometry> LevelGenerator::GetGeometry(std::vector<action> actions)
 	return geometryElements;
 }
 
-std::vector<GameObject*> LevelGenerator::GetLevelObjects(std::vector<action> actions, sf::Vector2f offset)
+std::vector<GameObject> LevelGenerator::GetLevelObjects(std::vector<action> actions, sf::Vector2f offset)
 {
 	return GetLevelObjects(GetGeometry(actions), offset);
 }
 
-std::vector<GameObject*> LevelGenerator::GetLevelObjects(std::vector<geometry> geometryElements, sf::Vector2f offset)
+std::vector<GameObject> LevelGenerator::GetLevelObjects(std::vector<geometry> geometryElements, sf::Vector2f offset)
 {
-	std::vector<GameObject*> gameObjects;
+	std::vector<GameObject> gameObjects;
 
 	for (auto e : geometryElements)
 	{
-		gameObjects.push_back(new GameObject(e.type, e.position + offset, e.size, std::max(avatar.scale.x, avatar.scale.y)));
+		gameObjects.push_back(GameObject(e.type, e.position + offset, e.size, std::max(avatar.scale.x, avatar.scale.y)));
 	}
 	return gameObjects;
 }
