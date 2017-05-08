@@ -52,6 +52,7 @@ Level* createLevel(rhythm r, sf::Vector2f offset = sf::Vector2f())
 
 std::vector<Level> createTestLevels(int levelID)
 {
+	int numberOfLevels = 10000;
 	std::vector<Level*> levels;
 	levels.reserve(10000);
 	rhythm r;
@@ -86,10 +87,11 @@ std::vector<Level> createTestLevels(int levelID)
 	r.density = (Density) (levelID % 3);
 	
 	
-	for (int i = 0; i < 10000; i++)
+	for (int i = 0; i < numberOfLevels; i++)
 	{
 		levels.push_back(createLevel(r));
 	}
+	std::cout << "Levels created for rhythm " << levelID << std::endl;
 	Level* linearityMin = levels.back();
 	Level* linearityMax = levels.back();
 	Level* leniencyMin = levels.back();
@@ -98,13 +100,25 @@ std::vector<Level> createTestLevels(int levelID)
 	float linearityAverage = 0;
 	float leniencyVariance = 0;
 	float linearityVariance = 0;
+	float linearityMedian = 0;
+	float leniencyMedian = 0;
+	std::vector<float> leniencies;
+	std::vector<float> linearities;
 
 	//Calculate averages for leniency and linearity
 	for (auto l : levels)
 	{
 		leniencyAverage += l->GetLeniency();
 		linearityAverage += l->GetLinearity();
+		linearities.push_back(l->GetLinearity());
+		leniencies.push_back(l->GetLeniency());
 	}
+	std::sort(linearities.begin(), linearities.end());
+	std::sort(leniencies.begin(), leniencies.end());
+
+	linearityMedian = (linearities.at(numberOfLevels / 2) + linearities.at(numberOfLevels / 2 - 1) )/ 2;
+	leniencyMedian = (leniencies.at(numberOfLevels / 2) + leniencies.at(numberOfLevels / 2 - 1)) / 2;
+
 	leniencyAverage /= levels.size();
 	linearityAverage /= levels.size();
 	
@@ -168,8 +182,8 @@ std::vector<Level> createTestLevels(int levelID)
 	else
 	{	
 		
-		tempString << "Linearity:  | " << linearityMin->GetLinearity()	<< " | " << linearityMax->GetLinearity() << " | " << linearityAverage << " | " << sqrt(linearityVariance) << "\n"
-			<< "Leniency: | " << leniencyMin->GetLeniency() << " | " << leniencyMax->GetLeniency() << " | " << leniencyAverage		<< " | " << sqrt(leniencyVariance);
+		tempString << "Linearity:  | " << linearityMin->GetLinearity()	<< " | " << linearityMax->GetLinearity() << " | " << linearityAverage << " | " << sqrt(linearityVariance) << " | " << linearityMedian << "\n"
+			<< "Leniency: | " << leniencyMin->GetLeniency() << " | " << leniencyMax->GetLeniency() << " | " << leniencyAverage		<< " | " << sqrt(leniencyVariance) << " | " << leniencyMedian;
 
 		
 		//std::cout << "Linearity: " << linearityMin->GetLinearity() << " - " << linearityMax->GetLinearity() << " (Avg: " << linearityAverage << ", Dev: " << sqrt(linearityVariance) << ")." << std::endl;
@@ -177,7 +191,7 @@ std::vector<Level> createTestLevels(int levelID)
 
 		for (auto level : result)
 		{
-			tempString << "\n | | | | |" << level.GetLinearity() << " | " << level.GetLeniency() << " | " << level.GetLength();
+			tempString << "\n | | | | | |" << level.GetLinearity() << " | " << level.GetLeniency() << " | " << level.GetLength();
 			//std::cout << "Linearity: " << level->GetLinearity() << " Leniency: " << level->GetLeniency() << " Length: " << level->GetLength() << std::endl;			
 		}
 		rhythmOutput[levelID] += tempString.str();
@@ -261,7 +275,7 @@ int main()
 					}
 					std::cout << "Finished." << std::endl;
 					system("CLS");
-					std::cout << "| min | max | avg | dev | linearity | leniency | length \n";
+					std::cout << "| min | max | avg | dev | med | linearity | leniency | length \n";
 					for (auto s : rhythmOutput)
 					{
 						std::cout << s;
